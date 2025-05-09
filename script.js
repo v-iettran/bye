@@ -153,6 +153,44 @@ const characters = [
         ]
     },
     {
+      id: "iffy",
+      name: "Iffy",
+      netId: "yh327", 
+      image: "./images/iffy.jpg",
+      stats: {
+        humor: 80,
+        kindness: 90,
+        energy: 70,
+        weird: 65
+      },
+      skills: [
+        {
+          key: "Q",
+          name: "Wait, That Was Real?",
+          icon: "fa-question-circle",
+          description: "Iffy gets tricked again—but drops a Sweet Dumpling out of sheer confusion. Allies who pick it up heal slightly. Enemies trying to grab it are stunned for 1 second by guilt and carbs."
+        },
+        {
+          key: "W",
+          name: "Wellness Splash",
+          icon: "fa-heart",
+          description: "She tosses an enchanted nail serum into the air. Allies in range are healed over time and sparkle with confidence. Enemies mildly blinded by the glow lose 10% accuracy for 3 seconds."
+        },
+        {
+          key: "E",
+          name: "Badminton Rally",
+          icon: "fa-wind",
+          description: "Iffy starts a rally with a teammate. The shuttlecock knocks back enemies caught in its path. Allies gain movement speed from sudden cardio excitement."
+        },
+        {
+          key: "R",
+          name: "Ultimate - Flash Book Club",
+          icon: "fa-book",
+          description: "Iffy dramatically whips out a book titled *'How to Spot a Liar (but still fall for it)'*. All enemies nearby are stunned as they pretend to read. Allies gain a short burst of resistance and one bonus Sweet Dumpling appears."
+        }
+      ]
+    },    
+    {
         id: "bikki",
         name: "Bikki",
         netId: "bp212",
