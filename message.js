@@ -2,103 +2,103 @@
 const messages = {
   'xz335': {
     name: 'Xinxin',
-    image: 'images/xinxin.JPG',
+    image: './images/xinxin.jpg',
     message: `Hi Xinxin,\n\nYou have a very pure energy that I don't know how to describe. You're so curious and open-minded about every possibility. I once told Tessa that by looking at how you interacted with people, I bet Xinxin has had a very happy childhood and I still believe that. I can feel the sincere when you smile, cry, and laugh, and sometimes I'm really jealous of you. I hope you can keep showing your true self like this no matter what happens!`
   },
   'oe23': {
     name: 'Othmane',
-    image: 'images/othmane.jpg',
+    image: './images/othmane.jpg',
     message: `Hi Othmane,\n\nYou're the GOAT of our team! Half of my highlights in this semester are from you. You let me join Iftar, cook for us, and again lead the midnight breakfast. I've learned so much from you, not just the dispcipline to wake up at 4:30am every day, but also the kindness and determination to help others. I hope you can keep being the person you are, and I hope we can meet again in the Morroco :)!`
   },
   'amj78': {
     name: 'Amelia',
-    image: 'images/amelia.jpg',
+    image: './images/amelia.jpg',
     message: `Hi Amelia,\n\nEven though I would say you appears to be very wit and you are truly very inspiring to me, at the first we talked, I knew you were silently a "crazy" person. My theory was right after you shared your idea to get faculty together to wrestle (I really liked that idea actually). Beyond that, you're caring and thoughtful. As a person who is not caring and thoughtful at all, I have learned a lot from you. I'm glad that we got to know each other and hope to see you soon somewhere around the world! `
   },
   // Add more messages for other teammates
   'ncm32': {
     name: 'Nikka',
-    image: 'images/nikka.JPG',
+    image: './images/nikka.JPG',
     message: `What's up Nikka,\n\nYou're funny. And funny people are smart. You have the charismatic energy that makes people feel so comfortable and offensive at the same time. I don't know you so well to say this but I know you can pull off anything because you have that kindness, sassiness, and thoughtfulness. I wish you can embrace the uncertainty and enjoy the life that's coming to you!`
   },
   'bp212': {
     name: 'Bikki',
-    image: 'images/bikki.jpg',
+    image: './images/bikki.jpg',
     message: `Hey Bikki,\n\nThanks for being the mouth of our team. I don't think our team would be as fun as it is without you. I know that you're a busy person and you'll have even more things to do in the future, but if you ever feel like you're overwhelmed, just remember that you've already had deep connections with the people here. I wish you resilience, happiness, and become the person want to be with no regrets :).`
   },
   'th358': {
     name: 'Minnie',
-    image: 'images/minnie.jpg',
+    image: './images/minnie.jpg',
     message: `Dear Minnie,\n\nYou said you felt like our team was a family, I actually didn't agree at first and thought you were so naive to think that way... But after spending time here, I could see why you said that and I think we all can see that. Thank you for accompanying us to the midnight breakfast, Wuxi, karaoke, and everything. I wish I could talk to you more and get to know you better. I don't know when the next time we meet is, but I hope it'd be in Europe. If you every feel like you have existential crisis (and I know you will at some point), text me, I'll give you some tips :).`
   },
   'fjh5': {
     name: 'Faith',
-    image: 'images/faith.JPG',
+    image: './images/faith.JPG',
     message: `Dear Faith,\n\nYou're so humble and nice. I mean I know people like you exist, but I never thought I would meet one in person. You care about everyone and always support them. I'm just afraid that one day you'll be tired of taking care of others...Just in case that happens, please remember that you can always take many breaks and be a little selfish. We are always here for you (I mean not always in terms of timezone but you know just shoot a message and you'll get replied in 2 business days). I really want to thank you for just your presense. I wish you the best in everything! `
   },
   'pjd18': {
     name: 'Patrick',
-    image: 'images/patrick.JPG',
+    image: './images/patrick.JPG',
     message: `Dear Patrick,\n\nTo be honest, I used to think you're a little fake and just trying to be nice to everyone because it's your job (Sorry I assume everyone is bad until they're proven to be good). But I can see your effort to be a supportive and lovely person that I don't think is in your job description. You has helped me open up and be more confident in my creativity and weirdness (which I think you've already regretted). Although I don't cry like Xinxin or Nikka, I hope you know that I've always looked up to you and learned a lot from you since being an OA. Please don't cry when you read this, it'll make people question what you're reading. I wish you could keep up this energy and get loved by more and more people around you. `
   },
   'cic6': {
     name: 'Zia',
-    image: 'images/zia.jpg',
+    image: './images/zia.jpg',
     message: `Hi Zia,\n\nI hope you're enjoying your time at home. We haven't heard from you in a while and I really want to catch up when you're here. You're always so positive (maybe not always but I know you have a positive mindset) and happy except when you were doing SigWork. I wonder if you ever feel exhausted just to keep that positivity up because I do and that's why I admire you so much. So sorry I could not visit you in Lunar New Year because the flight was so crazy expensive. But when I save up enough money, I'll come! I wish the time you spent with us has been a good memory for you and I wish you all the luck and happiness.`
   },
   'sl879': {
     name: 'Sheng En',
-    image: 'images/shengen.jpg',
+    image: './images/shengen.jpg',
     message: `Hi Sheng En,\n\nThanks for your skateboard, it really helps me a lot. Thanks for the flower vase from your ex, it really suits the sunflower I bought. Thanks for helping Tessa create handicap-friendly shoes :), I really appreciate that. I know you're among the youngest in our team but I think you're the smartest (just look the classes you took, we can all tell that). I hope you can show more of yourself, your creativity, and your kindness to the world. I bet you can replace my position as the menace of our team. I wish you everything you want in life!`
   },
   'jrc123': {
     name: 'Jesse',
-    image: 'images/jesse.JPG',
+    image: './images/jesse.JPG',
     message: `Yo Jesse,\n\nYou know I'm always jealous of your piano talent since Duke? I mean I've tried to learn by myself but it's so hard. Anyway, thanks for being a part of our team and for being so supportive. I know you are very bright and talented so it'll be extra to wish you good luck. But everyone needs a little luck to be successful, so I wish you all the luck!`
   },
   'md459': {
     name: 'Khoi',
-    image: 'images/khoi.jpg',
+    image: './images/khoi.jpg',
     message: `Zup Khoi,\n\nI hope you enjoyed your time in the US. I don't really know you so well except for the fact that you're a very smart and humourous person. I also didn't even know you can sing acapella until last year, bro is doing side quest, so talented. I don't know what you're up to in the future but remember that you can always be yourself and be happy. I wish you find the joy in everything you do!`
   },
   'lq55': {
     name: 'Coco',
-    image: 'images/coco.jpg',
+    image: './images/coco.jpg',
     message: `Hi Coconut,\n\nHow's US? I haven't had chance to say thank you for your gift so I'd say here. Thank you! I hope you have had great time at Duke, met many new friends, and had good memories with them. The first time we talked, I thought you were just a dumb and naive person who didn't care about anything (you don't know where Viet Nam is). But after spending time with you and the team, I can see you care about everyone in a very unique way. I think you are very warm and considerate, and I hope you can keep being that person. I wish you will have more memorable moments for the rest of the time at DKU!`
   },
   'nlt19': {
     name: 'Audrey',
-    image: 'images/audrey.jpg',
+    image: './images/audrey.jpg',
     message: `Hi Audrey,\n\nI was about to write something in Vietnamese but it'll increase my social awkwardness level to 1000. I feel that you're the most mature person in some of the aspects. A very smart and mindful person. I also know know you're sentimental through all of your poems you made and I think that's very beautiful. No matter how hard life strikes you, keep that caring heart open and I bet you'll be loved by many people!`
   },
   'yh327': {
     name: 'Iffy',
-    image: 'images/iffy.jpg',
+    image: './images/iffy.jpg',
     message: `Hi Iffy,\n\nI guess we've only interacted a few times. The karaoke, some team meetings, and the one time you came to eat Pani Puri with us. With just those few interactions, I can only say you're a good target for my jokes and liars =))))). I wish we'd have more time to get to know each other and more time for me to make fun of you haha. I hope you can have more good memories with the team next year. The experience as being RA has taught me a lot and I hope it will be the same for you. Wish you all the best!`
   },
   'ph155': {
     name: 'Peilin',
-    image: 'images/peilin.jpg',
+    image: './images/peilin.jpg',
     message: `Hi Peilin,\n\nEveryone in our team knows that I'm half French now, you know? I'll be back in my home country in a few weeks, so if you're going to visit Paris, let me know, I'll show you around. Anyway, do you enjoy US? Look at your IG stories, I bet you have a lot of fun. I know you're a little shy and introverted (at least to me) but I hope you can open up more and share your true self with us. I wish your last year at DKU will be full of joy and happiness. Stack that bag with awesome memories and happiness!`
   },
   'tat30': {
     name: 'Tekla',
-    image: 'images/tekla.JPG',
+    image: './images/tekla.JPG',
     message: `Umm Tekla,\n\nI didn't know that you were that funny. Certified joke of the team. You're also giving out bossy vibe. I don't like bossy people but you're bossy and get shit done so that's a pass. Anyway, I do feel very lucky to have you on the team for this semester. You create a different dynamic but can still keep that menace vibe of courtyard 3. I'd love to spend more time here to get to know more about you and what you do because from your IG, it's very cool to see you solo travel a lot. But I guess this might be the last or second last time we talk already. I wish you all the best and have a bunch of good memories with these people in your last semester.`
   },
   'nt119': {
     name: 'Nika',
-    image: 'images/nika.JPG',
+    image: './images/nika.JPG',
     message: `Hi Nika,\n\nDo you know the longest talk we had was in the sauna? Just a random fact but anyway, I always feel that you're very confident or at least appear to be confident. Even when you said you're uncertain about the future, you seems to be well-prepared for that, mentally. In either way, I really admire that about you and want to get just of bit of that mentality for myself. I truly appreciate your presence in our team and hope you can have more cool experiences in the future!`
   },
   'wh174': {
     name: 'Vivian',
-    image: 'images/vivian.JPG',
+    image: './images/vivian.JPG',
     message: `Hi Vivian,\n\nI don't know you well enough to say anything about you. But I hope that you have had a great time with this crazy team. I wish we could have more time but I know we all have our own things to worry about. For the rest of the time at DKU, I wish you can make the most out of it, have a lot of fun, and learn many new things as you interact with more people. I manifest happiness, peacefulness, and joy for you!`
   },
   'yh459': {
     name: 'Belinda',
-    image: 'images/belinda.JPG',
+    image: './images/belinda.JPG',
     message: `Hi Belinda,\n\nYou're the most dedicated person I know. As Patrick said in the EoY celebration, you've been sent to the most chaotic team and still managed to keep that positive energy whenever we come to you. I know you're very busy and tired and I truly hope you have some time to relax. I don't know anything about your experience in DKU but I'm sure the longer you stay here, the more you'll love this place. Not because of place (Kunshan is actually so boring) but because of the people that will come and go through your time here. I wish you can find your joy and shed more happy tears just like Patrick. I'm really grateful that you're our RLC for this semester!`
   }
 };
@@ -106,61 +106,61 @@ const messages = {
 // Default message if nothing else matches
 const defaultMessage = {
   name: 'Friend',
-  image: 'images/placeholder.jpg',
+  image: './images/placeholder.jpg',
   message: `Thank you for being part of our amazing team! Your contributions and presence have made this experience special for all of us.\n\nWith appreciation,\n[Your Name]`
 };
 
 // Define available JPG team photos (excluding HEIC files that might not render in all browsers)
 const teamPhotos = [
-  'team%20images/1.JPG',
-  'team%20images/2.JPG',
-  'team%20images/3.JPG',
-  'team%20images/4.JPG',
-  'team%20images/5.JPG',
-  'team%20images/7.JPG',
-  'team%20images/8.JPG',
-  'team%20images/9.JPG',
-  'team%20images/10.JPG',
-  'team%20images/12.JPG',
-  'team%20images/13.JPG',
-  'team%20images/14.JPG',
-  'team%20images/15.JPG',
-  'team%20images/16.JPG',
-  'team%20images/17.JPG',
-  'team%20images/18.jpg',
-  'team%20images/19.jpg',
-  'team%20images/20.jpg',
-  'team%20images/21.jpg',
-  'team%20images/22.jpg',
-  'team%20images/23.jpg',
-  'team%20images/24.jpg',
-  'team%20images/25.jpg',
-  'team%20images/26.jpg',
-  'team%20images/27.jpg',
-  'team%20images/28.jpg',
-  'team%20images/29.jpg',
-  'team%20images/30.jpg',
-  'team%20images/31.jpg',
-  'team%20images/32.jpg',
-  'team%20images/33.jpg',
-  'team%20images/34.jpg',
-  'team%20images/35.jpg',
-  'team%20images/36.jpg',
-  'team%20images/37.jpg',
-  'team%20images/38.jpg',
-  'team%20images/39.jpg',
-  'team%20images/40.jpg',
-  'team%20images/41.jpg',
-  'team%20images/42.jpg',
-  'team%20images/43.jpg',
-  'team%20images/44.jpg',
-  'team%20images/45.jpg',
-  'team%20images/46.jpg',
-  'team%20images/47.jpg',
-  'team%20images/48.jpg',
-  'team%20images/49.jpg',
-  'team%20images/50.jpg',
-  'team%20images/51.jpg'
+  './team%20images/1.JPG',
+  './team%20images/2.JPG',
+  './team%20images/3.JPG',
+  './team%20images/4.JPG',
+  './team%20images/5.JPG',
+  './team%20images/7.JPG',
+  './team%20images/8.JPG',
+  './team%20images/9.JPG',
+  './team%20images/10.JPG',
+  './team%20images/12.JPG',
+  './team%20images/13.JPG',
+  './team%20images/14.JPG',
+  './team%20images/15.JPG',
+  './team%20images/16.JPG',
+  './team%20images/17.JPG',
+  './team%20images/18.jpg',
+  './team%20images/19.jpg',
+  './team%20images/20.jpg',
+  './team%20images/21.jpg',
+  './team%20images/22.jpg',
+  './team%20images/23.jpg',
+  './team%20images/24.jpg',
+  './team%20images/25.jpg',
+  './team%20images/26.jpg',
+  './team%20images/27.jpg',
+  './team%20images/28.jpg',
+  './team%20images/29.jpg',
+  './team%20images/30.jpg',
+  './team%20images/31.jpg',
+  './team%20images/32.jpg',
+  './team%20images/33.jpg',
+  './team%20images/34.jpg',
+  './team%20images/35.jpg',
+  './team%20images/36.jpg',
+  './team%20images/37.jpg',
+  './team%20images/38.jpg',
+  './team%20images/39.jpg',
+  './team%20images/40.jpg',
+  './team%20images/41.jpg',
+  './team%20images/42.jpg',
+  './team%20images/43.jpg',
+  './team%20images/44.jpg',
+  './team%20images/45.jpg',
+  './team%20images/46.jpg',
+  './team%20images/47.jpg',
+  './team%20images/48.jpg',
+  './team%20images/49.jpg',
+  './team%20images/50.jpg',
+  './team%20images/51.jpg'
 ];
 
 // Get the NetID from the URL
