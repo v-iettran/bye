@@ -117,7 +117,7 @@ const characters = [
     {
         id: "audrey",
         name: "Audrey",
-        netId: "anv32",
+        netId: "nlt19",
         image: "./images/audrey.jpg",
         stats: {
           humor: 75,
@@ -155,7 +155,7 @@ const characters = [
     {
         id: "bikki",
         name: "Bikki",
-        netId: "brs91",
+        netId: "bp212",
         image: "./images/bikki.jpg",
         stats: {
           humor: 88,
@@ -193,7 +193,7 @@ const characters = [
     {
     id: "coco",
     name: "Coco",
-    netId: "cc401",
+    netId: "lq55",
     image: "./images/coco.jpg",
     stats: {
         humor: 75,
@@ -231,7 +231,7 @@ const characters = [
     {
     id: "faith",
     name: "Faith",
-    netId: "fc507",
+    netId: "fjh5",
     image: "./images/faith.JPG",
     stats: {
         humor: 80,
@@ -269,7 +269,7 @@ const characters = [
     {
     id: "jesse",
     name: "Jesse",
-    netId: "jc405",
+    netId: "jrc123",
     image: "./images/jesse.JPG",
     stats: {
         humor: 75,
@@ -307,7 +307,7 @@ const characters = [
     {
     id: "khoi",
     name: "Khoi",
-    netId: "hk120",
+    netId: "md459",
     image: "./images/khoi.jpg",
     stats: {
         humor: 90,
@@ -345,7 +345,7 @@ const characters = [
     {
     id: "minnie",
     name: "Minnie",
-    netId: "mj85",
+    netId: "th358",
     image: "./images/minnie.jpg",
     stats: {
         humor: 80,
@@ -383,7 +383,7 @@ const characters = [
     {
     id: "nikka",
     name: "Nikka",
-    netId: "nt72",
+    netId: "ncm32",
     image: "./images/nikka.JPG",
     stats: {
         humor: 95,
@@ -421,7 +421,7 @@ const characters = [
     {
     id: "patrick",
     name: "Patrick",
-    netId: "pt56",
+    netId: "pjd18",
     image: "./images/patrick.JPG",
     stats: {
         humor: 85,
@@ -459,7 +459,7 @@ const characters = [
     {
     id: "shengen",
     name: "Sheng'en",
-    netId: "sz280",
+    netId: "sl879",
     image: "./images/shengen.jpg",
     stats: {
         humor: 80,
@@ -497,7 +497,7 @@ const characters = [
     {
         id: "zia",
         name: "Zia",
-        netId: "zz247",
+        netId: "cic6",
         image: "./images/zia.jpg",
         stats: {
           humor: 80,
@@ -535,7 +535,7 @@ const characters = [
       {
         id: "belinda",
         name: "Belinda",
-        netId: "bc235",
+        netId: "yh459",
         image: "./images/belinda.JPG",
         stats: {
           humor: 70,
@@ -573,7 +573,7 @@ const characters = [
       {
         id: "vivian",
         name: "Vivian",
-        netId: "vf20",
+        netId: "wh174",
         image: "./images/vivian.JPG",
         stats: {
           humor: 65,
@@ -611,7 +611,7 @@ const characters = [
       {
         id: "nika",
         name: "Nika",
-        netId: "ng156",
+        netId: "nt119",
         image: "./images/nika.JPG",
         stats: {
           humor: 75,
@@ -649,7 +649,7 @@ const characters = [
       {
         id: "tekla",
         name: "Tekla",
-        netId: "tg99",
+        netId: "tat30",
         image: "./images/tekla.JPG",
         stats: {
           humor: 85,
@@ -687,7 +687,7 @@ const characters = [
       {
         id: "peilin",
         name: "Peilin",
-        netId: "pl175",
+        netId: "ph155",
         image: "./images/peilin.jpg",
         stats: {
           humor: 65,
