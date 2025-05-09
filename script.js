@@ -4,7 +4,7 @@ const characters = [
         id: "xinxin",
         name: "Xinxin",
         netId: "xz335",
-        image: "images/xinxin.jpg",
+        image: "./images/xinxin.jpg",
         stats: {
         humor: 85,
         kindness: 90,
@@ -42,7 +42,7 @@ const characters = [
         id: "othmane",
         name: "Othmane",
         netId: "oe23",
-        image: "images/othmane.jpg",
+        image: "./images/othmane.jpg",
         stats: {
         humor: 80,
         kindness: 75,
@@ -80,7 +80,7 @@ const characters = [
         id: "amelia",
         name: "Amelia",
         netId: "amj78",
-        image: "images/amelia.jpg",
+        image: "./images/amelia.jpg",
         stats: {
         humor: 70,
         kindness: 95,
@@ -118,7 +118,7 @@ const characters = [
         id: "audrey",
         name: "Audrey",
         netId: "anv32",
-        image: "images/audrey.jpg",
+        image: "./images/audrey.jpg",
         stats: {
           humor: 75,
           kindness: 80,
@@ -156,7 +156,7 @@ const characters = [
         id: "bikki",
         name: "Bikki",
         netId: "brs91",
-        image: "images/bikki.jpg",
+        image: "./images/bikki.jpg",
         stats: {
           humor: 88,
           kindness: 80,
@@ -194,7 +194,7 @@ const characters = [
     id: "coco",
     name: "Coco",
     netId: "cc401",
-    image: "images/coco.jpg",
+    image: "./images/coco.jpg",
     stats: {
         humor: 75,
         kindness: 98,
@@ -232,7 +232,7 @@ const characters = [
     id: "faith",
     name: "Faith",
     netId: "fc507",
-    image: "images/faith.JPG",
+    image: "./images/faith.JPG",
     stats: {
         humor: 80,
         kindness: 95,
@@ -269,8 +269,8 @@ const characters = [
     {
     id: "jesse",
     name: "Jesse",
-    netId: "jj192",
-    image: "images/jesse.JPG",
+    netId: "jc405",
+    image: "./images/jesse.JPG",
     stats: {
         humor: 75,
         kindness: 80,
@@ -307,8 +307,8 @@ const characters = [
     {
     id: "khoi",
     name: "Khoi",
-    netId: "kl999",
-    image: "images/khoi.jpg",
+    netId: "hk120",
+    image: "./images/khoi.jpg",
     stats: {
         humor: 90,
         kindness: 75,
@@ -345,8 +345,8 @@ const characters = [
     {
     id: "minnie",
     name: "Minnie",
-    netId: "ml567",
-    image: "images/minnie.jpg",
+    netId: "mj85",
+    image: "./images/minnie.jpg",
     stats: {
         humor: 80,
         kindness: 95,
@@ -383,8 +383,8 @@ const characters = [
     {
     id: "nikka",
     name: "Nikka",
-    netId: "nk12",
-    image: "images/nikka.JPG",
+    netId: "nt72",
+    image: "./images/nikka.JPG",
     stats: {
         humor: 95,
         kindness: 70,
@@ -421,8 +421,8 @@ const characters = [
     {
     id: "patrick",
     name: "Patrick",
-    netId: "pjh27",
-    image: "images/patrick.JPG",
+    netId: "pt56",
+    image: "./images/patrick.JPG",
     stats: {
         humor: 85,
         kindness: 95,
@@ -459,8 +459,8 @@ const characters = [
     {
     id: "shengen",
     name: "Sheng'en",
-    netId: "slh29",
-    image: "images/shengen.jpg",
+    netId: "sz280",
+    image: "./images/shengen.jpg",
     stats: {
         humor: 80,
         kindness: 85,
@@ -497,8 +497,8 @@ const characters = [
     {
         id: "zia",
         name: "Zia",
-        netId: "zj441",
-        image: "images/zia.jpg",
+        netId: "zz247",
+        image: "./images/zia.jpg",
         stats: {
           humor: 80,
           kindness: 90,
@@ -535,8 +535,8 @@ const characters = [
       {
         id: "belinda",
         name: "Belinda",
-        netId: "bb912",
-        image: "images/belinda.JPG",
+        netId: "bc235",
+        image: "./images/belinda.JPG",
         stats: {
           humor: 70,
           kindness: 95,
@@ -573,8 +573,8 @@ const characters = [
       {
         id: "vivian",
         name: "Vivian",
-        netId: "va999",
-        image: "images/vivian.JPG",
+        netId: "vf20",
+        image: "./images/vivian.JPG",
         stats: {
           humor: 65,
           kindness: 95,
@@ -611,8 +611,8 @@ const characters = [
       {
         id: "nika",
         name: "Nika",
-        netId: "nk007",
-        image: "images/nika.JPG",
+        netId: "ng156",
+        image: "./images/nika.JPG",
         stats: {
           humor: 75,
           kindness: 70,
@@ -649,8 +649,8 @@ const characters = [
       {
         id: "tekla",
         name: "Tekla",
-        netId: "tk001",
-        image: "images/tekla.JPG",
+        netId: "tg99",
+        image: "./images/tekla.JPG",
         stats: {
           humor: 85,
           kindness: 80,
@@ -687,8 +687,8 @@ const characters = [
       {
         id: "peilin",
         name: "Peilin",
-        netId: "pl678",
-        image: "images/peilin.jpg",
+        netId: "pl175",
+        image: "./images/peilin.jpg",
         stats: {
           humor: 65,
           kindness: 95,
