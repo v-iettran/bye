@@ -4,7 +4,7 @@ const characters = [
         id: "xinxin",
         name: "Xinxin",
         netId: "xz335",
-        image: "images/xinxin.JPG",
+        image: "images/xinxin.jpg",
         stats: {
         humor: 85,
         kindness: 90,
@@ -232,7 +232,7 @@ const characters = [
     id: "faith",
     name: "Faith",
     netId: "fc507",
-    image: "images/faith.jpg",
+    image: "images/faith.JPG",
     stats: {
         humor: 80,
         kindness: 95,
@@ -270,7 +270,7 @@ const characters = [
     id: "jesse",
     name: "Jesse",
     netId: "jj192",
-    image: "images/jesse.jpg",
+    image: "images/jesse.JPG",
     stats: {
         humor: 75,
         kindness: 80,
@@ -384,7 +384,7 @@ const characters = [
     id: "nikka",
     name: "Nikka",
     netId: "nk12",
-    image: "images/nikka.jpg",
+    image: "images/nikka.JPG",
     stats: {
         humor: 95,
         kindness: 70,
@@ -422,7 +422,7 @@ const characters = [
     id: "patrick",
     name: "Patrick",
     netId: "pjh27",
-    image: "images/patrick.jpg",
+    image: "images/patrick.JPG",
     stats: {
         humor: 85,
         kindness: 95,
@@ -536,7 +536,7 @@ const characters = [
         id: "belinda",
         name: "Belinda",
         netId: "bb912",
-        image: "images/belinda.jpg",
+        image: "images/belinda.JPG",
         stats: {
           humor: 70,
           kindness: 95,
@@ -574,7 +574,7 @@ const characters = [
         id: "vivian",
         name: "Vivian",
         netId: "va999",
-        image: "images/vivian.jpg",
+        image: "images/vivian.JPG",
         stats: {
           humor: 65,
           kindness: 95,
@@ -612,7 +612,7 @@ const characters = [
         id: "nika",
         name: "Nika",
         netId: "nk007",
-        image: "images/nika.jpg",
+        image: "images/nika.JPG",
         stats: {
           humor: 75,
           kindness: 70,
@@ -650,7 +650,7 @@ const characters = [
         id: "tekla",
         name: "Tekla",
         netId: "tk001",
-        image: "images/tekla.jpg",
+        image: "images/tekla.JPG",
         stats: {
           humor: 85,
           kindness: 80,
