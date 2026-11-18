@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>RA Squad: The Last Duty Night</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=UnifrakturMaguntia&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+<main id="frame">
+  <div id="stage">
+    <canvas id="screen" width="320" height="180" aria-label="RA Squad: The Last Duty Night"></canvas>
+    <div id="hudTop" class="hud" hidden><button type="button" id="pauseBtn" aria-label="Pause">II</button></div>
+    <div id="trainBar" class="hud" hidden>
+      <button type="button" id="toHeroes">Heroes</button>
+      <button type="button" id="startS2" hidden>Stage 2</button>
+      <button type="button" id="startS3" hidden>Stage 3</button>
+      <button type="button" id="startNight" class="gold">Start the night</button>
+    </div>
+    <div id="reunionBar" class="hud" hidden>
+      <button type="button" id="photoBtn" class="gold">Take the group photo</button>
+    </div>
+    <div id="caption" class="hud" hidden aria-live="polite">
+      <b id="capKey"></b>
+      <div><h4 id="capName"></h4><p id="capText"></p></div>
+    </div>
+  </div>
+</main>
+
+<section id="title" class="screen on" aria-label="Title">
+  <div class="title-card">
+    <p class="kicker">RA Squad</p>
+    <h1>The Last<br>Duty Night</h1>
+    <p class="sub">One night. Twenty RAs. Three things standing between you and a goodbye.</p>
+    <button type="button" id="startBtn" class="big gold" data-focus>Press start</button>
+    <button type="button" id="memBtn" class="big ghost" hidden>The memory wall</button>
+    <p class="hint">Keyboard: arrows, Space, Shift, Q W E R. Touch works too.</p>
+  </div>
+</section>
+
+<section id="select" class="screen" aria-label="Choose your RA">
+  <header class="sel-head">
+    <button type="button" id="selBack" class="ghost">Back</button>
+    <h2>Choose your RA</h2>
+  </header>
+  <div class="sel-body">
+    <div id="grid" role="list"></div>
+    <aside id="info">
+      <div class="info-top">
+        <canvas id="bigSprite" width="48" height="48"></canvas>
+        <div>
+          <h3 id="infoName"></h3>
+          <p id="infoRole" class="role"></p>
+          <p id="infoTrait" class="trait" hidden><b id="traitLabel"></b> <span id="traitText"></span></p>
+          <p id="clearedTag" class="cleared" hidden>Stage 1 cleared</p>
+        </div>
+      </div>
+      <button type="button" id="trainBtn" class="big gold">Enter the training room</button>
+      <div id="stats"></div>
+      <ol id="skillList"></ol>
+    </aside>
+  </div>
+</section>
+
+<section id="pause" class="screen" aria-label="Paused">
+  <div class="panel">
+    <h2>Paused</h2>
+    <button type="button" id="pauseResume" class="big gold" data-focus>Resume</button>
+    <button type="button" id="pauseRestart" class="big">Restart stage</button>
+    <button type="button" id="pauseQuit" class="big ghost">Quit to heroes</button>
+  </div>
+</section>
+
+<section id="result" class="screen" aria-label="Result">
+  <div class="panel">
+    <h2 id="resTitle"></h2>
+    <p id="resText"></p>
+    <button type="button" id="resPrimary" class="big gold" data-focus></button>
+    <button type="button" id="resSecondary" class="big ghost"></button>
+  </div>
+</section>
+
+<section id="ending" class="screen" aria-label="Farewell">
+  <div id="verseStep" class="end-step">
+    <p id="verse" aria-live="polite"></p>
+    <button type="button" id="toPhoto" class="big gold fade">Continue</button>
+  </div>
+  <div id="photoStep" class="end-step" hidden>
+    <div class="photo-frame">
+      <img id="pixelPhoto" alt="The squad's pixel group photo">
+      <img id="realPhoto" src="photos/01.jpg" alt="The squad, for real">
+    </div>
+    <button type="button" id="toWall" class="big gold fade">Open the memory wall</button>
+  </div>
+  <div id="wallStep" class="end-step" hidden>
+    <h2>The memories</h2>
+    <p class="sub">Tap a photo to open it. Arrow keys work too.</p>
+    <div id="wall"></div>
+    <h3>The whole squad</h3>
+    <div id="cast"></div>
+    <div class="end-buttons">
+      <button type="button" id="endAgain" class="big gold">Play as someone else</button>
+      <button type="button" id="endTitle" class="big ghost">Back to the title</button>
+    </div>
+  </div>
+</section>
+
+<div id="lb" hidden role="dialog" aria-label="Photo">
+  <img id="lbImg" alt="Team photo">
+  <div class="nav">
+    <button type="button" id="lbPrev">&lt; Prev</button>
+    <button type="button" id="lbPlay">Play</button>
+    <button type="button" id="lbNext">Next &gt;</button>
+    <button type="button" id="lbClose">Close</button>
+  </div>
+</div>
+
+<div id="touch" hidden>
+  <div id="pad" data-pad data-dir="0" aria-label="Move left or right"><i class="l"></i><i class="r"></i></div>
+  <div id="skills">
+    <button type="button" data-act="q">Q</button>
+    <button type="button" data-act="w">W</button>
+    <button type="button" data-act="e">E</button>
+    <button type="button" data-act="r">R</button>
+  </div>
+  <div id="ab">
+    <button type="button" data-act="roll" class="b" aria-label="Dodge roll">B</button>
+    <button type="button" data-act="jump" class="a" aria-label="Jump">A</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/enemies.js"></script>
+<script src="js/boss.js"></script>
+<script src="js/enemies2.js"></script>
+<script src="js/enemies3.js"></script>
+<script src="js/stages.js"></script>
+<script src="js/stages23.js"></script>
+<script src="js/heroes/amelia.js"></script>
+<script src="js/heroes/othmane.js"></script>
+<script src="js/heroes/coco.js"></script>
+<script src="js/heroes/xinxin.js"></script>
+<script src="js/heroes/audrey.js"></script>
+<script src="js/heroes/iffy.js"></script>
+<script src="js/heroes/bikki.js"></script>
+<script src="js/heroes/faith.js"></script>
+<script src="js/heroes/jesse.js"></script>
+<script src="js/heroes/khoi.js"></script>
+<script src="js/heroes/minnie.js"></script>
+<script src="js/heroes/nikka.js"></script>
+<script src="js/heroes/patrick.js"></script>
+<script src="js/heroes/shengen.js"></script>
+<script src="js/heroes/zia.js"></script>
+<script src="js/heroes/belinda.js"></script>
+<script src="js/heroes/vivian.js"></script>
+<script src="js/heroes/nika.js"></script>
+<script src="js/heroes/tekla.js"></script>
+<script src="js/heroes/peilin.js"></script>
+<script src="js/ending.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
