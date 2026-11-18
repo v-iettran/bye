@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA Squad: The Last Duty Night</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=UnifrakturMaguntia&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#14122a;--panel:#231f47;--line:#4b4590;--ink:#f4f1ff;--dim:#a9a3d6;--gold:#ffd447;--red:#ff5d6c;--green:#5fe08a;--blue:#62b6ff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Press Start 2P",ui-monospace,Menlo,Consolas,monospace;font-size:10px;line-height:1.7}
+img,canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{max-width:880px;margin:0 auto;padding:16px 12px 40px;min-height:100vh}
+.screen{display:none}.screen.on{display:block}
+h1{font-size:20px;color:var(--gold);text-shadow:3px 3px 0 #000;margin:0 0 8px;line-height:1.4}
+h2{font-size:12px;margin:0 0 10px;color:var(--gold)}
+.dim{color:var(--dim)}
+.btn{display:inline-block;background:var(--gold);color:#1b1500;border:0;padding:12px 16px;box-shadow:0 4px 0 #a37b00;margin-top:12px;text-decoration:none}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a37b00}
+.btn:disabled{background:#555;color:#999;box-shadow:0 4px 0 #333;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--dim);box-shadow:none;border:2px solid var(--line)}
+.panel{background:var(--panel);border:3px solid var(--line);padding:12px}
+#title{text-align:center;padding-top:8vh}
+#title .row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:24px 0}
+#title .row img{width:56px;animation:bob 1s steps(2) infinite}
+#title .row img:nth-child(even){animation-delay:.5s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.card{background:var(--panel);border:3px solid var(--line);padding:6px 2px 4px;text-align:center;font-size:8px;position:relative}
+.card img{width:56px;display:block;margin:0 auto 2px}
+.card.sel{border-color:var(--gold);background:#3a3470}
+.card.sel::after{content:attr(data-n);position:absolute;top:2px;right:4px;color:var(--gold)}
+#info{margin-top:12px;min-height:150px;display:grid;grid-template-columns:96px 1fr;gap:12px}
+#info img{width:96px}
+.bars{display:grid;grid-template-columns:70px 1fr;gap:4px 8px;align-items:center;font-size:8px;margin:8px 0}
+.bar{height:8px;background:#0d0b1f;border:2px solid #000}.bar i{display:block;height:100%;background:var(--blue)}
+.sk{font-size:8px;color:var(--dim);margin:2px 0}.sk b{color:var(--ink)}
+#stageWrap{position:relative;border:3px solid var(--line);background:#000}
+#stage{display:block;width:100%;aspect-ratio:16/9}
+.pop{position:absolute;transform:translate(-50%,-50%);font-size:12px;text-shadow:2px 2px 0 #000;pointer-events:none;white-space:nowrap;animation:pop 1s steps(10) forwards}
+@keyframes pop{to{margin-top:-46px;opacity:0}}
+#banner{position:absolute;left:0;right:0;top:38%;text-align:center;font-size:14px;color:var(--gold);text-shadow:3px 3px 0 #000;background:rgba(0,0,0,.75);padding:12px 4px;display:none}
+#status{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.st{background:var(--panel);border:3px solid var(--line);padding:6px;font-size:8px}
+.st.act{border-color:var(--gold)}.st.ko{opacity:.45}
+.hp{height:8px;background:#0d0b1f;border:2px solid #000;margin:4px 0 2px;position:relative}
+.hp i{display:block;height:100%;background:var(--green)}.hp u{position:absolute;left:0;top:0;height:100%;background:var(--blue);opacity:.85}
+.ult{color:var(--gold);float:right}
+#skills{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.sbtn{background:var(--panel);border:3px solid var(--line);padding:8px 4px;font-size:8px;min-height:62px;text-align:center}
+.sbtn kbd{display:block;font:inherit;font-size:12px;color:var(--gold);margin-bottom:4px}
+.sbtn:hover:not(:disabled),.sbtn:focus{border-color:var(--gold)}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+.tags{display:block;color:var(--blue);margin-top:4px;font-size:7px}
+#log{margin-top:6px;height:120px;overflow-y:auto;font-size:8px;line-height:1.9}
+#log p{margin:0 0 6px}#log .n{color:var(--gold)}#log .b{color:var(--red)}#log .d{color:var(--dim)}
+#wave{display:flex;justify-content:space-between;margin-bottom:6px;font-size:8px}
+#end{text-align:center;padding-top:8vh}
+#end .row img{width:80px;margin:0 6px}
+#end p{max-width:520px;margin:14px auto;font-size:9px}
+/* farewell + memories */
+#farewell{min-height:90vh;text-align:center;padding-top:14vh}
+#verse{font-family:"UnifrakturMaguntia","Old English Text MT",Georgia,serif;font-size:clamp(26px,5.2vw,46px);line-height:1.5;color:#f6e7b8;text-shadow:0 0 18px rgba(255,212,71,.35);min-height:5.2em;white-space:pre-line}
+#farewell .btn{opacity:0;transition:opacity 1s}
+#farewell .btn.in{opacity:1}
+#memories h1{text-align:center;margin:10px 0 4px}
+#memories .sub{text-align:center;margin-bottom:18px}
+#wall{columns:3 220px;column-gap:18px;padding:6px}
+.pol{break-inside:avoid;display:block;width:100%;margin:0 0 20px;background:#fbf7ec;padding:9px 9px 6px;border:0;box-shadow:0 6px 0 rgba(0,0,0,.45);
+ transform:translateY(40px) rotate(var(--r));opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1.2),opacity .6s}
+.pol.in{transform:rotate(var(--r));opacity:1}
+.pol:hover,.pol:focus{transform:rotate(0) scale(1.04);z-index:2;position:relative}
+.pol img{display:block;width:100%;image-rendering:auto;background:#ddd}
+.pol span{display:block;font-family:"Caveat",cursive;font-size:18px;color:#3a3350;line-height:1.5;text-align:center}
+.tape{position:absolute;top:-8px;left:50%;width:54px;height:16px;margin-left:-27px;background:rgba(255,212,71,.75);transform:rotate(-3deg)}
+#cast{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:26px 0 8px}
+#cast div{text-align:center;font-size:7px;width:64px}#cast img{width:48px;display:block;margin:0 auto}
+#lb{position:fixed;inset:0;background:rgba(8,6,20,.94);display:none;align-items:center;justify-content:center;z-index:9;padding:12px}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:82vh;image-rendering:auto;border:8px solid #fbf7ec;box-shadow:0 10px 0 rgba(0,0,0,.5)}
+#lb .nav{position:absolute;bottom:14px;left:0;right:0;text-align:center}
+#lb .nav button{background:var(--panel);border:3px solid var(--line);padding:10px 12px;margin:0 3px;font-size:9px}
+@media (max-width:520px){html,body{font-size:9px}#skills{grid-template-columns:repeat(2,1fr)}#info{grid-template-columns:64px 1fr}#info img{width:64px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.pol{transition:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="title" class="screen on">
+    <h1>RA SQUAD</h1>
+    <div class="dim">THE LAST DUTY NIGHT</div>
+    <div class="row" id="parade"></div>
+    <p class="dim">Pick 3 fighters. Beat 3 monsters.<br>Every skill is real. Sort of.</p>
+    <button class="btn" id="startBtn">PRESS START</button>
+    <div><button class="btn ghost" id="memBtn" style="display:none">THE MEMORIES</button></div>
+  </section>
+
+  <section id="select" class="screen">
+    <h2>PICK YOUR SQUAD <span id="count" class="dim">0/3</span></h2>
+    <div class="grid" id="grid"></div>
+    <div class="panel" id="info"><span class="dim" style="grid-column:1/3">Tap a fighter to see their skills.</span></div>
+    <button class="btn" id="fightBtn" disabled>FIGHT!</button>
+  </section>
+
+  <section id="battle" class="screen">
+    <div id="wave"><span id="waveName"></span><span id="turnName" class="dim"></span></div>
+    <div id="stageWrap"><canvas id="stage" width="256" height="144"></canvas><div id="banner"></div></div>
+    <div id="status"></div>
+    <div id="skills"></div>
+    <div class="panel" id="log" aria-live="polite"></div>
+  </section>
+
+  <section id="end" class="screen">
+    <h1>SQUAD WIPED</h1>
+    <div class="row" id="endRow"></div>
+    <p id="endText"></p>
+    <button class="btn" id="againBtn">TRY AGAIN</button>
+  </section>
+
+  <section id="farewell" class="screen">
+    <div id="verse"></div>
+    <button class="btn" id="toMem">OPEN THE MEMORIES</button>
+  </section>
+
+  <section id="memories" class="screen">
+    <h1>THE MEMORIES</h1>
+    <div class="sub dim">Tap a photo. Arrow keys work too.</div>
+    <div id="wall"></div>
+    <h2 style="text-align:center;margin-top:20px">THE WHOLE SQUAD</h2>
+    <div id="cast"></div>
+    <div style="text-align:center"><button class="btn" id="again2">PLAY AGAIN</button></div>
+  </section>
+</div>
+<div id="lb"><img id="lbImg" alt="Team photo"><div class="nav"><button id="lbPrev">&lt; PREV</button><button id="lbPlay">PLAY</button><button id="lbNext">NEXT &gt;</button><button id="lbClose">CLOSE</button></div></div>
+
+<script>
+// ================= DATA =================
+const FIGHTERS = [{"id": "xinxin", "name": "Xinxin", "stats": {"humor": 85, "kindness": 90, "energy": 75, "weird": 60}, "skills": [{"key": "Q", "name": "Tear Barrage", "description": "Fires a wave of heartfelt tears forward. Enemies feel slightly guilty and move slower. Allies caught in the splash feel emotionally healed and may call their mom."}, {"key": "W", "name": "Hug of Friendship", "description": "Xinxin zooms to a friend and gives them the best imaginary hug. Removes stress, shame, and one awkward moment. Cooldown reduced when surrounded by new friends."}, {"key": "E", "name": "Qingdao Breeze", "description": "Summons a gentle ocean breeze from her hometown. Everyone nearby feels calmer, walks faster, and may start daydreaming. Bonus effect if near Laoshan beer."}, {"key": "R", "name": "Ultimate - Global Cry Session", "description": "After a short pause, Xinxin bursts into tears so pure and sincere that the entire squad feels it. Allies get shields made of love. Enemies get confused and teary-eyed. A teammate whispers: 'She's crying again, isn't she?'"}]}, {"id": "othmane", "name": "Othmane", "stats": {"humor": 80, "kindness": 75, "energy": 90, "weird": 65}, "skills": [{"key": "Q", "name": "Tactical Slide Tackle", "description": "Dashes in like a soccer pro, knocking down the first misbehaving target. Double impact if they skipped breakfast or left the kitchen messy."}, {"key": "W", "name": "Halal Shield", "description": "Cooks a magical Moroccan dish on the spot. Closest hungry teammate is fed and shielded. Also restores morale and gives light parental guidance."}, {"key": "E", "name": "Kitchen Discipline", "description": "Marks a teammate with 'Chef's Orders'. They gain a burst of focus. If they mess up, Othmane sighs and does it himself, the right way."}, {"key": "R", "name": "Ultimate - The Final Whistle", "description": "Blows a golden referee whistle. Allies are repositioned into perfect soccer formation. Enemies out of line are frozen in shame and reflection."}]}, {"id": "amelia", "name": "Amelia", "stats": {"humor": 70, "kindness": 95, "energy": 80, "weird": 55}, "skills": [{"key": "Q", "name": "High Note", "description": "Releases a crystal-clear note in a straight line. Enemies hit are silenced, partly from confusion and partly from being kind of impressed. If cast while standing on a chair or elevated spot, the note sparkles and deals extra charm."}, {"key": "W", "name": "Genius Harmony", "description": "Amelia toggles gently between two moods: 🎓 Smart Mode - gives nearby allies increased focus and reduced cooldowns. 🎤 Performer Mode - boosts movement speed and charisma. Can occasionally inspire an impromptu duet."}, {"key": "E", "name": "Secret Wild Card", "description": "Amelia briefly lets her chaotic side peek out. She might dash unexpectedly, say something deeply crazy, or flash a mysterious smile. Always leaves both teams slightly bewildered."}, {"key": "R", "name": "Ultimate - If I Ain't Got You", "description": "Amelia performs her iconic blind audition piece with heart and grace. Allies across the map receive a gentle healing wave. Enemies pause—not stunned, just deeply moved. One of them quietly says, 'She was in The Voice Kids??'"}]}, {"id": "audrey", "name": "Audrey", "stats": {"humor": 75, "kindness": 80, "energy": 65, "weird": 60}, "skills": [{"key": "Q", "name": "Poetic Justice", "description": "Audrey crafts a sharp one-liner in the form of a poem. Enemies hit feel mildly roasted and lose focus for 2 seconds. Allies gain +10 literary appreciation."}, {"key": "W", "name": "Resident Fatigue", "description": "Audrey sighs deeply. If that one specific resident is nearby, they are silenced for 3 seconds. If not, Audrey regains patience and 10 mana."}, {"key": "E", "name": "Midnight Overthink", "description": "Audrey enters a thoughtful state, increasing intelligence and spell power. However, she occasionally forgets what she was doing and types a poem in team chat instead."}, {"key": "R", "name": "Ultimate - National Poet", "description": "Audrey recites a powerful poem about resilience, friendship, and being Vietnamese in a dorm full of chaos. Allies across the map are inspired and gain bonus clarity. Enemies feel strangely reflective."}]}, {"id": "iffy", "name": "Iffy", "stats": {"humor": 80, "kindness": 90, "energy": 70, "weird": 65}, "skills": [{"key": "Q", "name": "Wait, That Was Real?", "description": "Iffy gets tricked again—but drops a Sweet Dumpling out of sheer confusion. Allies who pick it up heal slightly. Enemies trying to grab it are stunned for 1 second by guilt and carbs."}, {"key": "W", "name": "Wellness Splash", "description": "She tosses an enchanted nail serum into the air. Allies in range are healed over time and sparkle with confidence. Enemies mildly blinded by the glow lose 10% accuracy for 3 seconds."}, {"key": "E", "name": "Badminton Rally", "description": "Iffy starts a rally with a teammate. The shuttlecock knocks back enemies caught in its path. Allies gain movement speed from sudden cardio excitement."}, {"key": "R", "name": "Ultimate - Flash Book Club", "description": "Iffy dramatically whips out a book titled *'How to Spot a Liar (but still fall for it)'*. All enemies nearby are stunned as they pretend to read. Allies gain a short burst of resistance and one bonus Sweet Dumpling appears."}]}, {"id": "bikki", "name": "Bikki", "stats": {"humor": 88, "kindness": 80, "energy": 95, "weird": 70}, "skills": [{"key": "Q", "name": "Endless Monologue", "description": "Bikki targets a small area and talks nonstop for 3 seconds. Enemies are silenced from sheer information overload. Allies gain slight focus and random fun facts."}, {"key": "W", "name": "Pani Puri Bomb", "description": "Throws a sizzling Pani Puri that bursts with flavor. Allies in range are healed and energized. Enemies hit suffer mild existential confusion and +10 hunger."}, {"key": "E", "name": "President's Presence", "description": "Bikki delivers a motivational speech, granting allies bonus leadership and 10% faster decision-making. If no one listens, he continues anyway, louder."}, {"key": "R", "name": "Ultimate – Secret Sip", "description": "Bikki discreetly vanishes for a 'walk' and returns 5 seconds later glowing with charisma. All allies gain +15 morale. Enemies can't explain why they suddenly trust him."}]}, {"id": "coco", "name": "Coco", "stats": {"humor": 75, "kindness": 98, "energy": 70, "weird": 50}, "skills": [{"key": "Q", "name": "Zhuzhu Rush", "description": "Coco calls for her loyal dog Zhuzhu, who dashes forward wagging its tail. Enemies are lightly bumped (emotionally) and slowed. Allies touched by Zhuzhu feel instantly better."}, {"key": "W", "name": "Best Friend Aura", "description": "Coco radiates wholesome energy in a small radius. Allies near her are slowly healed and receive +5 optimism. Xinxin gains double effect because, of course."}, {"key": "E", "name": "Innocent Confusion", "description": "Coco looks genuinely puzzled, unintentionally dodging all skillshots for 2 seconds. Enemies attempting to target her suffer mild guilt and 10% reduced damage."}, {"key": "R", "name": "Ultimate - Kindness Overload", "description": "Coco gives a heartfelt group message to all players, even the enemy team. Allies are fully healed. Enemies pause for 3 seconds, rethinking their life choices or don't understand what she says because she's crying while saying it."}]}, {"id": "faith", "name": "Faith", "stats": {"humor": 80, "kindness": 95, "energy": 60, "weird": 45}, "skills": [{"key": "Q", "name": "Caretaker's Call", "description": "Faith sends a group message that instantly rallies all Courtyard 3 RAs within range. Their motivation rises by 15% (or at least they stop ignoring the group chat)."}, {"key": "W", "name": "Community Cooldown", "description": "Faith activates her calming presence, reducing stress and cooldowns for all nearby allies. Also applies a 'You Got This' buff that prevents burnout for 10 seconds."}, {"key": "E", "name": "Microwave Mastery", "description": "Faith prepares a comforting microwave meal with unmatched speed. Grants a temporary morale boost, especially effective on overworked students and tired RAs. Can't be cast if she's currently being cooked by life."}, {"key": "R", "name": "Ultimate - Burnout Barrier", "description": "Faith channels her final-year power and creates a protective barrier over all RAs. Shields them from job rejection emails, thesis breakdowns, and excessive duty shifts. Faith cannot cast this again until she finds a job or naps—whichever comes first."}]}, {"id": "jesse", "name": "Jesse", "stats": {"humor": 75, "kindness": 80, "energy": 70, "weird": 65}, "skills": [{"key": "Q", "name": "Birthday Calculator", "description": "Jesse instantly tells you what day of the week you were born on. Stuns the target with mild existential crisis. Cooldown reduced when someone says, 'No way, how did you do that so fast?'"}, {"key": "W", "name": "Smooth Jazz Aura", "description": "Jesse starts playing jazz piano out of nowhere. Allies nearby gain rhythm, mood regeneration, and a vague sense that life might just be okay after all."}, {"key": "E", "name": "Secret Solo", "description": "Jesse hums or sings quietly to himself. If an enemy hears it, they are distracted and slowed. If an ally hears it, they gain a brief inspiration buff and request a full concert."}, {"key": "R", "name": "Ultimate – Nerdy Note Drop", "description": "Combining music and math, Jesse releases a wave of jazz-infused equations across the battlefield. Enemies are confused ('Was that a 7/8 time signature?'), while allies are buffed with bonus clarity and jazz hands."}]}, {"id": "khoi", "name": "Khoi", "stats": {"humor": 90, "kindness": 75, "energy": 65, "weird": 70}, "skills": [{"key": "Q", "name": "Rapid Rebuttal", "description": "Khoi fires off a rapid series of arguments in the enemy's general direction. Opponents are silenced for 2 seconds, too overwhelmed to respond. Bonus effect if the phrase 'respectfully' is used."}, {"key": "W", "name": "Dodged Agenda", "description": "Khoi gracefully avoids a scheduled team meeting. Gains stealth for 10 minutes and returns with a funny story and a good reason (probably)."}, {"key": "E", "name": "On-Air Flex", "description": "Khoi briefly recalls his televised debate days, gaining confidence and bonus charisma. Enemies doubt themselves. Allies are impressed and say 'Wait, you were on TV?!'"}, {"key": "R", "name": "Ultimate – Mic Drop", "description": "Khoi delivers a closing argument so powerful it stuns all enemies in range. Ends with a literal mic drop. Cooldown is reset if someone claps or says 'Well played.'"}]}, {"id": "minnie", "name": "Minnie", "stats": {"humor": 80, "kindness": 95, "energy": 85, "weird": 50}, "skills": [{"key": "Q", "name": "Passport Toss", "description": "Minnie throws a passport toward her target, inspiring allies with wanderlust and slight jealousy. Grants bonus movement speed and the sudden urge to book a flight."}, {"key": "W", "name": "Warmest Hug", "description": "Heals an ally and removes stress with a soft smile and kind words. If the ally is older than Minnie (which is everyone), they also feel 10% more protective for 8 seconds."}, {"key": "E", "name": "Deutsch Desperation", "description": "Minnie attempts to speak German. Enemies are briefly confused ('Did she say bread or mountain?'). Allies nearby are motivated by her courage and gain +1 learning spirit."}, {"key": "R", "name": "Ultimate – The World Awaits", "description": "Minnie gathers her dreams of travel and unleashes a burst of optimism. All allies gain +10% travel-inspired energy and a sudden desire to plan their next trip—regardless of their budget."}]}, {"id": "nikka", "name": "Nikka", "stats": {"humor": 95, "kindness": 70, "energy": 85, "weird": 80}, "skills": [{"key": "Q", "name": "Sassy Dribble", "description": "Nikka weaves through enemies with a ball and a sarcastic grin. Each bounce raises an existential question for enemies, causing minor confusion and delayed reaction."}, {"key": "W", "name": "Satirical Wisdom", "description": "Delivers a quick philosophical jab disguised as a joke. Allies are intellectually inspired (+focus), enemies are momentarily distracted thinking, 'Wait... is she right?'"}, {"key": "E", "name": "Soccer Dialectics", "description": "Nikka slide tackles the opponent while citing a philosopher mid-move. If she lands it clean, she steals a buff and leaves a quote behind that nobody really understands."}, {"key": "R", "name": "Ultimate – The Thought Experiment", "description": "Nikka launches a debate bomb: 'Would you date an AI if it loved you back?' Enemies freeze in moral panic for 2.5 seconds. Allies gain confidence, sass, and 10% bonus intellect because... why not."}]}, {"id": "patrick", "name": "Patrick", "stats": {"humor": 85, "kindness": 95, "energy": 80, "weird": 60}, "skills": [{"key": "Q", "name": "Cat Break", "description": "Patrick summons one of his two cats to the battlefield. The cat walks across the screen, charming enemies and calming allies with unexpected feline wisdom. If both cats appear, morale spikes."}, {"key": "W", "name": "Emotional Boost", "description": "Patrick gives an impromptu speech full of heartfelt encouragement. Allies in range get a shield of emotional support and +15% resilience. Patrick might cry a little, but that's just fuel for the buff."}, {"key": "E", "name": "Hallway Hype", "description": "Dashes to the nearest group of students and starts vibing. Grants bonus movement speed, extra friendliness, and slightly awkward but sincere energy to all allies nearby."}, {"key": "R", "name": "Ultimate – Resident Reunion", "description": "Patrick hosts a giant floor gathering. Everyone (even enemies) is pulled in for a moment of connection. Allies are healed and inspired; enemies forget what they were mad about. Someone brings snacks."}]}, {"id": "shengen", "name": "Sheng'en", "stats": {"humor": 80, "kindness": 85, "energy": 90, "weird": 65}, "skills": [{"key": "Q", "name": "Precision Bake", "description": "Sheng'en throws a perfectly baked cookie in a straight line. Allies hit are healed. Enemies hit feel inadequate and slightly burnt inside."}, {"key": "W", "name": "Resident Detour", "description": "If that one resident enters her lane, Sheng'en activates this ability to teleport 200 units away while leaving behind a polite but firm note."}, {"key": "E", "name": "Kickflip Dash", "description": "Sheng'en hops on her skateboard, dashing forward and ignoring terrain. Knocks aside minor obstacles and stress. Audrey nearby? They both gain bonus chill."}, {"key": "R", "name": "Ultimate - Genius Mode", "description": "Sheng'en enters an unstoppable brainwave state. Her baking auto-crits, equations solve themselves, and the annoying resident accidentally locks their door from the outside."}]}, {"id": "zia", "name": "Zia", "stats": {"humor": 80, "kindness": 90, "energy": 85, "weird": 60}, "skills": [{"key": "Q", "name": "Comfort Dish", "description": "Zia serves up a perfectly cooked favorite. Heals the lowest-health ally and grants them temporary armor, because nothing beats good food made with love."}, {"key": "W", "name": "Sing-Along Saucepan", "description": "Zia hums and raps while cooking or cleaning. Allies in range slowly regain energy and feel 30% happier. Bonus effects if anyone joins in or compliments her voice."}, {"key": "E", "name": "Movie Night Dash", "description": "Zia dashes to a teammate holding popcorn, instantly pulling them into 'movie night mode'. They both gain bonus health regen and reduced cooldowns due to pure chill vibes."}, {"key": "R", "name": "Ultimate – Potluck Premiere", "description": "Zia hosts a surprise potluck and film screening. All allies are healed, gain a morale boost, and enter a calm state (reduced incoming damage). Enemies caught in the area are mildly confused and start craving for her food and a good horror."}]}, {"id": "belinda", "name": "Belinda", "stats": {"humor": 70, "kindness": 95, "energy": 65, "weird": 40}, "skills": [{"key": "Q", "name": "Proposal Approval", "description": "Belinda quickly scans through an event proposal. If it's under budget and does not include food, it's instantly approved. Grants the RA bonus confidence and +5 funding luck."}, {"key": "W", "name": "Reimbursement Ritual", "description": "Channels paperwork energy to summon the sacred Reimbursement Form. Grants allies delayed gold income and a temporary buff called 'Please Don't Forget Your Fapiao.'"}, {"key": "E", "name": "1:1 Sync-up", "description": "Initiates a heartfelt one-on-one check-in with an RA. Restores morale, clears 1 stack of burnout, and temporarily boosts ally communication stats."}, {"key": "R", "name": "Ultimate - RLC Mode: Activated", "description": "Belinda enters RLC Mode for 10 seconds. While active, all allies receive clarity on next steps, faster response times, and emotional support. The background music subtly shifts to 'you got this' vibes."}]}, {"id": "vivian", "name": "Vivian", "stats": {"humor": 65, "kindness": 95, "energy": 70, "weird": 45}, "skills": [{"key": "Q", "name": "Mahjong Mastery", "description": "Vivian draws a perfect tile and flings it with quiet precision. Enemies hit are briefly stunned by her strategic genius. If the enemy is overconfident, the stun lasts 1 extra second out of respect."}, {"key": "W", "name": "Green Thumb Grace", "description": "Vivian gently places a potted plant on the ground. Allies near it slowly regenerate energy and perspective. If a staff or faculty walks by, they feel oddly understood."}, {"key": "E", "name": "Surprise Uplift", "description": "Vivian casually drops a wholesome surprise (homemade moss kit, cozy lantern, or mini thank-you note). Random ally receives +20 morale and feels seen for who they are."}, {"key": "R", "name": "Ultimate – Community Whisperer", "description": "Vivian hosts a magical event that somehow resonates with students, staff, and faculty alike. Everyone affected gains a lasting buff: +empathy, +focus, and a subtle desire to pay it forward."}]}, {"id": "nika", "name": "Nika", "stats": {"humor": 75, "kindness": 70, "energy": 85, "weird": 60}, "skills": [{"key": "Q", "name": "Gym Buff Slam", "description": "Nika delivers a well-timed flex and slams the ground. Enemies in a short radius are knocked back by the shockwave of raw confidence. Gains bonus damage if cast near a mirror."}, {"key": "W", "name": "Hot Take Shield", "description": "Unleashes a spicy political opinion that forms a fiery barrier. The first enemy to challenge it gets stunned briefly from intellectual overload. Allies behind the shield gain +debate resistance."}, {"key": "E", "name": "Passport Dash", "description": "Nika dashes across the map like he's catching a flight. Leaves behind a stylish blur and a faint scent of airport lounge. Grants movement speed and dodges the next incoming ability."}, {"key": "R", "name": "Ultimate - Mullet Majesty", "description": "Nika's mullet glows with celestial confidence. Enemies are momentarily blinded by awe, reducing their accuracy. Allies within range feel strangely cooler and gain +15 swagger."}]}, {"id": "tekla", "name": "Tekla", "stats": {"humor": 85, "kindness": 80, "energy": 75, "weird": 65}, "skills": [{"key": "Q", "name": "Cinnamon Swirl", "description": "Summons the comforting scent of freshly baked cinnamon rolls. Enemies in the area slow down from cozy distraction. Allies nearby regain a bit of warmth and morale."}, {"key": "W", "name": "Solo Soar", "description": "Tekla zips to a new location on the map like she just booked a last-minute solo trip. Gains brief invulnerability and inspiration, boosting next skill effectiveness."}, {"key": "E", "name": "Boardroom Spark", "description": "Channels her stress from the SLB and throws that into the nearest enemy. The enemy who gets hit is stunned by 1-5 seconds depending on the amount of work in the SLB."}, {"key": "R", "name": "Ultimate - Bake & Break", "description": "Tekla sets up a pop-up midnight bakery. For a short duration, allies in the area slowly regenerate energy while enemies are mildly stunned by the smell of carbs and wholesomeness. Ends with a warm laugh that boosts team morale."}]}, {"id": "peilin", "name": "Peilin", "stats": {"humor": 65, "kindness": 95, "energy": 70, "weird": 40}, "skills": [{"key": "Q", "name": "Trust Beam", "description": "Fires a beam of unfiltered trust in a straight line. Allies hit feel safe and supported. If cast on the wrong person (e.g., the user), Peilin gets mildly bamboozled for 2 seconds."}, {"key": "W", "name": "Accidental Ally", "description": "Randomly befriends someone nearby, granting them bonus healing and confidence. She may not know what's happening, but she's doing her best."}, {"key": "E", "name": "Gullible Grace", "description": "Temporarily becomes immune to negative emotions. If tricked during this time, reflects 50% of emotional damage back with a confused smile and a polite 'Really?'"}, {"key": "R", "name": "Ultimate - Pure Innocence", "description": "Peilin remembers that Viet is half French, gaining a burst of pride (+30 pride and +20 movement speed), start charging at the enemy in front of her and knocking them up. Allies nearby are inspired by her courage and gain +10% movement speed."}]}];   // from script.js; NetIDs deliberately left out
+const PHOTOS = ["photos/01.jpg", "photos/02.jpg", "photos/03.jpg", "photos/04.jpg", "photos/05.jpg", "photos/06.jpg", "photos/07.jpg", "photos/08.jpg", "photos/09.jpg", "photos/10.jpg", "photos/11.jpg", "photos/12.jpg", "photos/13.jpg", "photos/14.jpg", "photos/15.jpg", "photos/16.jpg", "photos/17.jpg", "photos/18.jpg", "photos/19.jpg", "photos/20.jpg", "photos/21.jpg", "photos/22.jpg", "photos/23.jpg", "photos/24.jpg", "photos/25.jpg", "photos/26.jpg", "photos/27.jpg", "photos/28.jpg", "photos/29.jpg", "photos/30.jpg", "photos/31.jpg", "photos/32.jpg", "photos/33.jpg", "photos/34.jpg", "photos/35.jpg", "photos/36.jpg", "photos/37.jpg", "photos/38.jpg", "photos/39.jpg", "photos/40.jpg", "photos/41.jpg", "photos/42.jpg", "photos/43.jpg", "photos/44.jpg", "photos/45.jpg", "photos/46.jpg", "photos/47.jpg", "photos/48.jpg", "photos/49.jpg", "photos/50.jpg", "photos/51.jpg"];       // files in ./photos
+const VERSE = "Fare thee well, dear friends.\nThough many a road shall part us,\nwe shall meet again.";
+
+// Character looks (inspired by each photo): sk skin, h hair, hs style, bg bangs, sh shirt, st stripe, gl 1 glasses 2 shades, fh 1 stubble 2 moustache, er earrings, pr/pc prop
+const A="#f6d3b0",Bk="#e2ac7c",C="#c98d5e";
+const LOOK={
+ xinxin:{sk:A,h:"#1a1420",hs:"long",sh:"#2b2b3a",pr:"heart",pc:"#ff7aa8"},
+ othmane:{sk:Bk,h:"#1c1612",hs:"curly",sh:"#2c3e73",st:"#f4f1ff",fh:1,pr:"ball",pc:"#f4f1ff"},
+ amelia:{sk:A,h:"#5a3a22",hs:"pony",sh:"#8d8f9c",st:"#5d6072",er:1,pr:"mic",pc:"#c9c9d6"},
+ audrey:{sk:A,h:"#5b2147",hs:"long",gl:1,sh:"#6a3fa0",pr:"feather",pc:"#f4f1ff"},
+ iffy:{sk:A,h:"#1a1420",hs:"shoulder",bg:1,gl:1,sh:"#3fa08a",pr:"book",pc:"#e86a5c"},
+ bikki:{sk:C,h:"#1e1a1a",hs:"curly",gl:1,sh:"#2f5fd0",pr:"speech",pc:"#f4f1ff"},
+ coco:{sk:Bk,h:"#1a1420",hs:"long",sh:"#c0392b",pr:"dog",pc:"#c98d5e"},
+ faith:{sk:Bk,h:"#14101a",hs:"long",gl:2,sh:"#7fb8e6",pr:"bowl",pc:"#ffb347"},
+ jesse:{sk:A,h:"#6b4a2f",hs:"buzz",sh:"#26262f",pr:"note",pc:"#ffd447"},
+ khoi:{sk:A,h:"#1a1420",hs:"bob",bg:1,gl:1,sh:"#8a8f9a",pr:"mic",pc:"#c9c9d6"},
+ minnie:{sk:A,h:"#1a1420",hs:"long",sh:"#1f1f2b",pr:"plane",pc:"#f4f1ff"},
+ nikka:{sk:A,h:"#7a5a3a",hs:"short",sh:"#3b6fd4",pr:"ball",pc:"#f4f1ff"},
+ patrick:{sk:A,h:"#c9a15a",hs:"short",gl:2,sh:"#24345e",pr:"cat",pc:"#f0a04b"},
+ shengen:{sk:A,h:"#4a2f20",hs:"long",gl:1,sh:"#f4f1ff",pr:"cookie",pc:"#c98d4a"},
+ zia:{sk:A,h:"#3a2a20",h2:"#b88a55",hs:"long",gl:1,sh:"#26262f",pr:"bowl",pc:"#ffb347"},
+ belinda:{sk:C,h:"#1a1210",hs:"curly",er:1,sh:"#2a3a6a",pr:"paper",pc:"#cfd3e6"},
+ vivian:{sk:A,h:"#1a1420",hs:"shoulder",bg:1,gl:1,sh:"#4c9a4a",pr:"plant",pc:"#5fe08a"},
+ nika:{sk:A,h:"#2a1c14",hs:"mullet",fh:2,sh:"#d1492f",pr:"dumbbell",pc:"#9aa0b5"},
+ tekla:{sk:A,h:"#6a452c",hs:"shoulder",sh:"#d9c3a0",pr:"cookie",pc:"#b5652b"},
+ peilin:{sk:A,h:"#2a1c18",hs:"long",gl:1,sh:"#5d7fb8",st:"#2f4f8a",pr:"heart",pc:"#ff7aa8"}
+};
+// Skill animations, one per Q/W/E/R: "type:icon:colour"
+const ANIM={
+ xinxin:["shot:tear:#6cc8ff","aura:heart:#ff7aa8","wave:wind:#bff3ff","rain:tear:#6cc8ff"],
+ othmane:["dash:ball:#f4f1ff","aura:bowl:#ffb347","aura:star:#ffd447","wave:star:#ffd447"],
+ amelia:["beam:note:#f4f1ff","aura:note:#b9a3ff","dash:quest:#ff7aa8","shot:note:#ffd447"],
+ audrey:["shot:feather:#f4f1ff","shot:zzz:#b9a3ff","aura:moon:#ffe9a6","rain:book:#b06ad6"],
+ iffy:["aura:bowl:#ffe2b0","aura:tear:#ff9ad5","shot:shuttle:#f4f1ff","rain:book:#e86a5c"],
+ bikki:["wave:speech:#f4f1ff","shot:ball:#ffa53c","aura:star:#ffd447","aura:cup:#ffd447"],
+ coco:["summon:dog:#c98d5e","aura:heart:#ff7aa8","aura:quest:#bff3ff","rain:heart:#ff7aa8"],
+ faith:["shot:speech:#f4f1ff","aura:wind:#bff3ff","aura:bowl:#ffb347","aura:star:#62b6ff"],
+ jesse:["shot:quest:#ffd447","aura:note:#62b6ff","shot:note:#b9a3ff","rain:note:#ffd447"],
+ khoi:["shot:speech:#f4f1ff","aura:wind:#a9a3d6","aura:star:#ffd447","rain:mic:#c9c9d6"],
+ minnie:["shot:book:#3b6fd4","aura:heart:#ff7aa8","wave:speech:#f4f1ff","rain:plane:#f4f1ff"],
+ nikka:["dash:ball:#f4f1ff","shot:quest:#ffd447","dash:book:#b06ad6","rain:quest:#ff7aa8"],
+ patrick:["summon:cat:#f0a04b","aura:heart:#ff7aa8","dash:star:#ffd447","rain:heart:#ffb347"],
+ shengen:["shot:cookie:#c98d4a","dash:wind:#bff3ff","dash:bolt:#ffd447","beam:bolt:#ffd447"],
+ zia:["aura:bowl:#ffb347","aura:note:#5fe08a","dash:cookie:#ffe9a6","rain:bowl:#ffb347"],
+ belinda:["shot:paper:#cfd3e6","aura:coin:#ffd447","aura:heart:#ff7aa8","beam:star:#62b6ff"],
+ vivian:["shot:tile:#5fe08a","aura:plant:#5fe08a","aura:star:#ffe9a6","rain:star:#ffd447"],
+ nika:["dash:dumbbell:#9aa0b5","shot:flame:#ff5d3c","dash:plane:#f4f1ff","beam:star:#ffd447"],
+ tekla:["shot:cookie:#b5652b","dash:plane:#f4f1ff","shot:bolt:#ffd447","rain:cookie:#b5652b"],
+ peilin:["beam:heart:#ff7aa8","aura:heart:#ffb3cf","aura:star:#bff3ff","rain:star:#ffe9a6"]
+};
+const BOSSES=[
+ {key:"resident",name:"THAT ONE RESIDENT",hp:480,atk:34,icon:"smoke",col:"#b9bdd1",
+  intro:"He is smoking in the corridor. Again. Under the sign.",hit:"blows a smoke cloud at",aoe:"The fire alarm goes off. The whole floor suffers."},
+ {key:"exams",name:"FINAL EXAMS",hp:680,atk:44,icon:"paper",col:"#f4f1ff",
+  intro:"Three papers, two duty shifts, zero sleep.",hit:"drops a surprise deadline on",aoe:"Pop quiz! Red pens rain on everyone."},
+ {key:"farewell",name:"THE FAREWELL",hp:900,atk:54,icon:"hand",col:"#b9a3ff",
+  intro:"It wears a graduation cap and carries a suitcase. It was always going to be the last one.",hit:"waves goodbye at",aoe:"It starts crying. Now everyone is crying."}
+];
+const ICONS={
+ note:["....##..","....#.#.","....#..#","....#...","....#...",".####...","#####...",".###...."],
+ tear:["...#....","...#....","..###...","..###...",".#####..",".#w###..",".#####..","..###..."],
+ heart:[".##..##.","########","#w######","########",".######.","..####..","...##...","........"],
+ star:["...#....","...#....","..###...","#######.","..###...","...#....","...#....","........"],
+ ball:["..####..",".##kk##.","#k####k#","###kk###","###kk###","#k####k#",".##kk##.","..####.."],
+ bowl:["..w..w..","...w..w.","..w..w..","########","#++++++#",".######.",".######.","..####.."],
+ book:[".######.",".#++++#w",".#+ww+#w",".#++++#w",".#++++#w",".#++++#w",".######w","..wwwwww"],
+ tile:[".######.",".#wwww#.",".#w##w#.",".#wwww#.",".#w##w#.",".#wwww#.",".######.","........"],
+ cat:["#.....#.","##...##.","#######.","#k###k#.","#######.",".##w##..",".#####.#",".#####.#"],
+ dog:[".##..##.",".##..##.",".######.",".#k##k#.",".######.",".##kk##.","..####..","...ww..."],
+ plant:["..#..#..",".###.##.","..####..","...##...","...##...",".oooooo.","..oooo..","..oooo.."],
+ flame:["...#....","..##....","..###.#.",".####.#.",".##y###.",".#yyy##.",".#yyy#..","..###..."],
+ wind:["........",".####...",".....#..","######..","........",".#####..","......#.","....##.."],
+ zzz:["####....","..#.....",".#..###.","####..#.",".....#..","....###.","........","........"],
+ paper:[".#####..",".#www##.",".#wwww#.",".#w++w#.",".#wwww#.",".#w++w#.",".#wwww#.",".######."],
+ plane:["........","#...#...","##..##..","########","########","##..##..","#...#...","........"],
+ mic:["..###...",".#w###..",".#####..","..###...","...k....","...k....","...k....","..kkk..."],
+ speech:[".######.","########","#k#k#k##","########",".######.","..##....",".##.....","........"],
+ quest:["..####..",".##..##.",".....##.","....##..","...##...","........","...##...","...##..."],
+ cookie:["..####..",".######.","##k###k#","########","###k####","#k####k#",".######.","..####.."],
+ feather:["......##","....####","...####.","..####..",".#k##...",".k###...","k.#.....","k......."],
+ dumbbell:["........","##....##","##....##","########","########","##....##","##....##","........"],
+ bolt:["....##..","...##...","..##....",".#####..","...##...","..##....",".##.....",".#......"],
+ moon:["..###...",".###....","###.....","###.....","###.....",".###..#.","..####..","........"],
+ coin:["..####..",".#wwww#.","#ww##ww#","#w#wwww#","#w#wwww#","#ww##ww#",".#wwww#.","..####.."],
+ shuttle:["#.#.#...","#.#.#...",".###....",".###....","..#.....",".kkk....",".kkk....","........"],
+ cup:["........",".######.",".#wwww##",".#####.#",".#####.#",".#######",".#####..","..###..."],
+ smoke:["..###...",".#####..","#######.","########","########",".######.","..####..","........"],
+ hand:[".#.#.#..",".#.#.#.#",".#.#.#.#",".#####.#",".######.",".######.","..####..","..####.."],
+ pen:["......rr",".....rrr","....rrr.","...rrr..","..rrr...",".wrr....","kwr.....","k......."]
+};
+
+// ================= HELPERS =================
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+window.SPEED=1;
+const wait=ms=>new Promise(r=>setTimeout(r,ms/window.SPEED));
+function shade(hex,f){const n=parseInt(hex.slice(1),16);const c=v=>Math.max(0,Math.min(255,Math.round(v*f)));return "rgb("+c(n>>16)+","+c(n>>8&255)+","+c(n&255)+")";}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo(0,0);}
+function log(html,cls){const p=document.createElement("p");if(cls)p.className=cls;p.innerHTML=html;$("log").appendChild(p);$("log").scrollTop=$("log").scrollHeight;}
+
+// ================= PIXEL DRAWING =================
+const W=256,H=144,cv=$("stage");let cx=cv.getContext("2d");
+function px(x,y,w,h,c){cx.fillStyle=c;cx.fillRect(Math.round(x),Math.round(y),w,h);}
+function disc(x,y,r,c){cx.fillStyle=c;x=Math.round(x);y=Math.round(y);for(let dy=-r;dy<=r;dy++){const w=Math.round(Math.sqrt(r*r-dy*dy));cx.fillRect(x-w,y+dy,w*2+1,1);}}
+const FIX={w:"#ffffff",k:"#1a1a2e",o:"#b5652b",y:"#ffe066",r:"#ff5d6c"};
+function drawIcon(name,x,y,col,s){s=s||1;const g=ICONS[name]||ICONS.star;x=Math.round(x);y=Math.round(y);
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){const ch=g[r][c];if(ch===".")continue;cx.fillStyle=ch==="#"?col:ch==="+"?shade(col,.65):FIX[ch];cx.fillRect(x+c*s,y+r*s,s,s);}}
+
+// Character: (x,y) = feet centre. Faces right.
+function drawChar(id,x,y,o){o=o||{};const L=LOOK[id],t=o.t||0,pose=o.pose||"idle";
+  x=Math.round(x);y=Math.round(y);
+  if(pose==="ko"){cx.save();cx.translate(x,y-3);cx.rotate(-Math.PI/2);cx.translate(-x,-y);cx.globalAlpha=.75;}
+  const b=(pose==="idle"&&(t>>5)%2)?1:0, T=y-24+b, hd=shade(L.h,.7), sd=shade(L.sh,.7);
+  const R=(dx,dy,w,h,c)=>px(x+dx,T+dy,w,h,c);
+  // hair behind
+  const back={long:16,shoulder:12,bob:10}[L.hs];
+  if(back){R(-6,1,12,back-1,L.h);if(L.h2)R(-6,back-5,12,5,L.h2);}
+  if(L.hs==="pony"){R(-8,3,3,3,L.h);R(-9,5,3,8,L.h);}
+  if(L.hs==="mullet"){R(-7,2,3,12,L.h);}
+  // legs (do not bob)
+  px(x-4,y-5,3,5,"#23233d");px(x+1,y-5,3,5,"#23233d");px(x-4,y-1,3,1,"#0d0b1f");px(x+1,y-1,3,1,"#0d0b1f");
+  // body
+  R(-4,11,8,8,L.sh);if(L.st){R(-4,12,8,1,L.st);R(-4,14,8,1,L.st);R(-4,16,8,1,L.st);}
+  // arms
+  R(-6,11,2,6,sd);R(-6,17,2,1,L.sk);
+  const up=pose==="cast"||pose==="sing";
+  if(up){R(4,7,2,5,sd);R(4,6,2,1,L.sk);}else{R(4,11,2,6,sd);R(4,17,2,1,L.sk);}
+  // head
+  R(-5,2,10,9,L.sk);R(-5,10,10,1,shade(L.sk,.85));
+  // hair top
+  if(L.hs==="buzz"){R(-4,1,8,1,L.h);R(-5,2,10,1,L.h);}
+  else{R(-4,0,8,1,L.h);R(-5,1,10,2,L.h);R(-5,3,1,2,L.h);R(4,3,1,2,L.h);R(-4,1,3,1,hd);}
+  if(L.hs==="curly"){R(-5,-1,2,1,L.h);R(-1,-1,2,1,L.h);R(3,-1,2,1,L.h);R(-6,1,1,4,L.h);R(5,1,1,4,L.h);}
+  if(L.bg){R(-4,3,8,1,L.h);R(-4,4,1,1,L.h);R(3,4,1,1,L.h);}
+  // face
+  if(L.gl===2){R(-4,5,4,3,"#14122a");R(1,5,4,3,"#14122a");R(0,6,1,1,"#14122a");R(-3,5,1,1,"#5a5f85");R(2,5,1,1,"#5a5f85");}
+  else{R(-3,5,1,2,"#1a1a2e");R(2,5,1,2,"#1a1a2e");
+    if(L.gl===1){const g="#3a3a55";R(-4,4,3,1,g);R(-4,7,3,1,g);R(-4,5,1,2,g);R(-2,5,1,2,g);R(1,4,3,1,g);R(1,7,3,1,g);R(1,5,1,2,g);R(3,5,1,2,g);R(-1,5,2,1,g);}}
+  if(L.er){R(-6,7,1,2,"#ffd447");}
+  if(pose==="sing"){R(-1,8,3,2,"#5a1a2a");}else{R(-1,9,2,1,"#a8505a");}
+  if(L.fh===1){R(-4,10,8,1,shade(L.sk,.7));}
+  if(L.fh===2){R(-2,8,4,1,L.h);}
+  // prop
+  if(L.pr)drawIcon(L.pr,x+5,up?T-2:T+11,L.pc);
+  if(pose==="ko")cx.restore();
+}
+function spriteURL(id,pose){const c=document.createElement("canvas");c.width=28;c.height=30;const keep=cx;cx=c.getContext("2d");drawChar(id,11,29,{pose:pose||"idle"});cx=keep;return c.toDataURL();}
+
+// ---- backgrounds ----
+function drawBg(i){
+  if(i===0){px(0,0,W,H,"#262340");px(0,112,W,32,"#3b3352");for(let x=0;x<W;x+=32)px(x,112,1,32,"#2d2742");px(0,110,W,2,"#191630");
+    [18,98].forEach(x=>{px(x,58,28,54,"#5a4630");px(x+2,60,24,52,"#6e5638");px(x+21,86,2,3,"#ffd447");px(x+8,66,12,8,"#3a3052");});
+    px(150,34,22,22,"#f4f1ff");disc(161,45,8,"#ff5d6c");disc(161,45,6,"#f4f1ff");px(156,44,10,2,"#55586a");for(let k=-5;k<=5;k++)px(161+k,45-k,2,1,"#ff5d6c");
+    [60,200].forEach(x=>{px(x-6,0,12,3,"#55506e");cx.fillStyle="rgba(255,233,166,.07)";cx.fillRect(x-22,3,44,109);});}
+  else if(i===1){px(0,0,W,H,"#33455a");px(0,112,W,32,"#5a4a3a");px(0,110,W,2,"#22303f");
+    px(22,26,78,40,"#4a3a2a");px(24,28,74,36,"#2f5f4a");px(30,36,30,1,"#cfe");px(30,42,44,1,"#cfe");px(30,48,22,1,"#cfe");px(70,52,20,6,"#ff5d6c");
+    disc(130,26,9,"#f4f1ff");disc(130,26,7,"#14122a");disc(130,26,6,"#f4f1ff");px(130,21,1,6,"#14122a");const a=tick/40;px(130+Math.cos(a)*4,26+Math.sin(a)*4,2,2,"#ff5d6c");
+    for(let x=8;x<150;x+=34){px(x,100,22,3,"#8a6a48");px(x+2,103,2,9,"#6a5038");px(x+18,103,2,9,"#6a5038");}}
+  else{const band=["#2b2a6b","#4a3278","#7a3f7e","#b9506f","#e8765c","#ffa35c"];band.forEach((c,k)=>px(0,k*19,W,19,c));
+    disc(128,112,22,"#ffe066");disc(128,112,16,"#fff3a6");px(0,112,W,32,"#2a2545");px(0,110,W,2,"#1a1632");
+    for(let s=0;s<14;s++)px((s*53)%W,(s*29)%50,1,1,"#fff");
+    drawIcon("plane",((tick*.25)%(W+40))-20,22+Math.sin(tick/40)*3,"#f4f1ff");
+    px(14,74,3,38,"#1a1632");px(8,70,26,10,"#1a1632");px(10,72,22,6,"#ffd447");}
+}
+// ---- bosses ----
+const BP={x:200,y:128};
+function drawBoss(B){if(B.gone)return;const t=tick;cx.save();cx.globalAlpha=B.alpha;
+  const hx=B.hurt>0?((t>>1)%2?2:-2):0,bx=BP.x+B.ox+hx,bob=Math.round(Math.sin(t/20)*1.5);
+  disc(bx,BP.y+2,2,"rgba(0,0,0,0)");cx.fillStyle="rgba(0,0,0,.3)";cx.fillRect(bx-18,BP.y,36,3);
+  if(B.key==="resident"){const by=BP.y,sk="#e8b890",hc="#5b6b4f",hk="#4a5840";
+    px(bx-9,by-13,7,13,"#2b3350");px(bx+2,by-13,7,13,"#2b3350");px(bx-12,by-2,10,2,"#e8c15a");px(bx,by-2,10,2,"#e8c15a");
+    px(bx-13,by-36+bob,26,24,hc);px(bx-7,by-22+bob,14,6,hk);px(bx+9,by-34+bob,5,16,hk);
+    px(bx-18,by-34+bob,6,10,hc);px(bx-19,by-38+bob,5,5,sk);
+    px(bx-11,by-51+bob,22,17,hc);px(bx-12,by-48+bob,2,12,hc);px(bx-10,by-47+bob,15,11,"#1d1d28");px(bx-9,by-46+bob,13,9,shade(sk,.8));
+    px(bx-8,by-44+bob,4,3,"#fff");px(bx-2,by-44+bob,4,3,"#fff");px(bx-8,by-43+bob,2,2,"#7a1f2a");px(bx-2,by-43+bob,2,2,"#7a1f2a");px(bx-8,by-41+bob,4,1,"#8a6a7a");px(bx-2,by-41+bob,4,1,"#8a6a7a");
+    px(bx-6,by-39+bob,5,1,"#5a2a2a");px(bx-17,by-39+bob,9,2,"#f4f1ff");px(bx-19,by-39+bob,2,2,(t>>3)%2?"#ff5d3c":"#ffb347");
+    for(let j=0;j<4;j++){const p=((t/60)+j/4)%1;disc(bx-20-p*8+Math.sin(p*7+j)*3,by-42+bob-p*30,1+Math.round(p*3),"rgba(205,205,220,"+(.6*(1-p)).toFixed(2)+")");}}
+  else if(B.key==="exams"){const y0=BP.y-52+bob*2,wv=Math.round(Math.sin(t/8)*3);
+    px(bx-11,y0+4,26,36,"#9ea3bd");px(bx-13,y0+2,26,36,"#c9cde0");px(bx-15,y0,26,36,"#f4f1ff");
+    for(let r=0;r<4;r++)px(bx-12,y0+21+r*4,r%2?14:19,1,"#9aa0c0");
+    px(bx+3,y0+3,2,9,"#ff3b4e");px(bx+3,y0+3,6,2,"#ff3b4e");px(bx+3,y0+7,4,2,"#ff3b4e");
+    px(bx-13,y0+5,5,1,"#14122a");px(bx-11,y0+6,4,1,"#14122a");px(bx-4,y0+6,4,1,"#14122a");px(bx-3,y0+5,5,1,"#14122a");
+    px(bx-12,y0+8,4,4,"#14122a");px(bx-4,y0+8,4,4,"#14122a");px(bx-12,y0+9,2,2,"#ff3b4e");px(bx-4,y0+9,2,2,"#ff3b4e");
+    for(let k=0;k<6;k++)px(bx-12+k*3,y0+15+(k%2),3,2,"#14122a");
+    px(bx-27,y0+18+wv,12,3,"#ffd447");px(bx-29,y0+18+wv,2,3,"#f0c9a0");px(bx-30,y0+19+wv,1,1,"#14122a");px(bx-17,y0+18+wv,2,3,"#ff9ab0");
+    px(bx+11,y0+22-wv,12,3,"#ff5d6c");px(bx+23,y0+22-wv,2,3,"#f4f1ff");
+    px(bx-8,y0+36,3,6-bob,"#c9cde0");px(bx+2,y0+36,3,6-bob,"#c9cde0");}
+  else{const by=BP.y+bob,c1="#6d5bd0",c2="#8f7fe8",wv=Math.sin(t/6);
+    disc(bx,by-36,19,c1);px(bx-19,by-36,39,28,c1);for(let k=0;k<7;k++)px(bx-19+k*6+((t>>4)%2?0:1),by-8,4,4+(k%2)*2,c1);
+    disc(bx-3,by-24,9,c2);
+    px(bx-14,by-58,28,3,"#14122a");px(bx-8,by-55,16,4,"#14122a");px(bx+12,by-57,1,8,"#ffd447");px(bx+11,by-50,3,3,"#ffd447");
+    px(bx-13,by-44,8,9,"#fff");px(bx,by-44,8,9,"#fff");px(bx-13,by-40,4,5,"#14122a");px(bx,by-40,4,5,"#14122a");px(bx-12,by-39,1,1,"#fff");px(bx+1,by-39,1,1,"#fff");
+    for(let j=0;j<2;j++){const p=((t/36)+j/2)%1;px(bx-11+j*13,by-34+p*18,2,3,"rgba(108,200,255,"+(1-p).toFixed(2)+")");}
+    px(bx-7,by-29,10,2,"#2a1a5e");px(bx-8,by-28,2,2,"#2a1a5e");px(bx+2,by-28,2,2,"#2a1a5e");
+    px(bx-26,by-30-wv*3,8,4,c1);disc(bx-28,by-33-wv*5,3,c2);
+    px(bx+17,by-18,13,13,"#b5652b");px(bx+17,by-13,13,2,"#7a421a");px(bx+21,by-21,5,3,"#7a421a");px(bx+22,by-20,3,2,c1);px(bx+16,by-22,3,6,c1);}
+  cx.restore();}
+
+// ================= EFFECTS ENGINE =================
+let tick=0,fx=[],floats=[],shake=0,flash=0,G=null,bgIndex=0;
+function fxp(dur,draw,delay){return new Promise(res=>fx.push({t:-(delay||0),dur,draw,done:res}));}
+function burst(x,y,col,n){n=n||7;const ps=[];for(let i=0;i<n;i++)ps.push({a:rnd(0,6.28),v:rnd(.6,1.8)});
+  fxp(14,k=>{ps.forEach(p=>px(x+Math.cos(p.a)*p.v*k*12,y+Math.sin(p.a)*p.v*k*12,k<.6?2:1,k<.6?2:1,col));});}
+function floatText(x,y,text,col){const s=document.createElement("span");s.className="pop";s.textContent=text;s.style.color=col;s.style.left=(x/W*100)+"%";s.style.top=(y/H*100)+"%";$("stageWrap").appendChild(s);setTimeout(()=>s.remove(),1000/Math.min(2,window.SPEED));}
+function shot(a,b,icon,col,o){o=o||{};const n=o.n||1,arc=o.arc==null?16:o.arc,s=o.s||1,dur=o.dur||22,all=[];
+  for(let i=0;i<n;i++)all.push(fxp(dur,k=>{const x=a.x+(b.x-a.x)*k,y=a.y+(b.y-a.y)*k-Math.sin(k*Math.PI)*(arc+(i%3)*5)+(o.hop?-Math.abs(Math.sin(k*Math.PI*4))*7:0);
+    drawIcon(icon,x-4*s,y-4*s,col,s);},i*(o.gap||5)).then(()=>burst(b.x+rnd(-5,5),b.y+rnd(-6,6),col)));
+  return Promise.all(all);}
+function beam(a,b,icon,col,dur){return fxp(dur,(k,t)=>{const w=(t>>1)%2?4:2;for(let x=a.x;x<b.x;x+=2){const y=a.y+(b.y-a.y)*((x-a.x)/(b.x-a.x));px(x,y-w/2,2,w,col);px(x,y,2,1,"#fff");}
+    for(let j=0;j<3;j++){const p=(k*2+j/3)%1;drawIcon(icon,a.x+(b.x-a.x)*p-4,a.y+(b.y-a.y)*p-9-Math.sin(p*9)*3,col);}
+    if((t|0)%6===0)burst(b.x+rnd(-6,6),b.y+rnd(-8,8),col,4);});}
+async function dash(m,icon,col,b){const dx=b.x-22-m.x,dy=b.y+18-m.y;
+  await fxp(11,k=>{m.ox=dx*k*k;m.oy=dy*k*k-Math.sin(k*Math.PI)*6;for(let j=1;j<4;j++)px(m.x+m.ox-j*7,m.y-14+m.oy,4,1,col);drawIcon(icon,m.x+m.ox+8,m.y+m.oy-18,col);});
+  burst(b.x,b.y,col,12);fxp(12,k=>{m.ox=dx*(1-k);m.oy=dy*(1-k);}).then(()=>{m.ox=m.oy=0;});}
+function aura(m,targets,icon,col,big){const all=[];
+  all.push(fxp(22,k=>{const r=4+k*(big?40:22);for(let a=0;a<6.28;a+=.25)px(m.x+Math.cos(a)*r,m.y-12+Math.sin(a)*r*.6,1,1,col);}));
+  targets.forEach((tg,i)=>{for(let j=0;j<(big?5:3);j++)all.push(fxp(26,k=>{cx.globalAlpha=1-k*k;drawIcon(icon,tg.x-4+Math.sin(j*2.4)*9,tg.y-8-k*30,col);cx.globalAlpha=1;},i*3+j*5));});
+  return Promise.all(all);}
+function rain(area,icon,col,n){const all=[];for(let i=0;i<n;i++){const x=area.x+rnd(-area.w,area.w),ey=area.y+rnd(-8,8);
+  all.push(fxp(16,k=>drawIcon(icon,x-4+(1-k)*-10,-10+(ey+10)*k*k,col),i*3).then(()=>burst(x,ey,col,4)));}return Promise.all(all);}
+function wave(a,b,icon,col,n){const all=[];for(let i=0;i<n;i++)all.push(fxp(24,k=>{const x=a.x+(b.x-a.x)*k,r=5+k*12;
+  for(let an=-1;an<=1;an+=.12){px(x+Math.cos(an)*r*.5,a.y+(b.y-a.y)*k+Math.sin(an)*r,1,1,col);px(x-5+Math.cos(an)*r*.5,a.y+(b.y-a.y)*k+Math.sin(an)*r*.7,1,1,shade(col,.7));}
+  if(i===0)drawIcon(icon,x-4,a.y+(b.y-a.y)*k-4,col);},i*7).then(()=>burst(b.x,b.y,col,5)));return Promise.all(all);}
+async function ultIntro(m,sk){const bn=$("banner");bn.textContent=m.f.name.toUpperCase()+": "+sk.name.replace(/^Ultimate\s*[-–]\s*/,"").toUpperCase();bn.style.display="block";
+  fxp(40,(k,t)=>{cx.fillStyle="rgba(0,0,0,.45)";cx.fillRect(0,0,W,H);for(let j=0;j<10;j++){const a=j*.63+t/9;px(m.x+Math.cos(a)*(26-k*18),m.y-12+Math.sin(a)*(26-k*18),2,2,"#ffd447");}drawChar(m.f.id,m.x,m.y,{pose:m.pose,t:tick});});
+  await wait(650);bn.style.display="none";}
+async function playSkill(m,k){const sk=m.f.skills[k],parts=ANIM[m.f.id][k].split(":"),type=parts[0],icon=parts[1],col=parts[2],ult=sk.key==="R";
+  const t=tagsOf(sk),off=isOffensive(t);
+  m.pose=["note","mic","speech","tear","quest"].includes(icon)?"sing":"cast";
+  const a={x:m.x+9,y:m.y-20},b={x:BP.x-4,y:BP.y-28},allies=alive();let hitBoss=true;
+  if(ult)await ultIntro(m,sk);
+  if(type==="shot")await shot(a,b,icon,col,{n:ult?10:3,gap:ult?3:5});
+  else if(type==="beam")await beam(a,b,icon,col,ult?46:26);
+  else if(type==="dash"){await dash(m,icon,col,b);if(ult){await wait(120);await dash(m,icon,col,b);}}
+  else if(type==="summon")await shot({x:m.x+10,y:m.y-8},{x:b.x,y:BP.y-10},icon,col,{n:ult?3:1,s:2,arc:0,hop:1,dur:34,gap:8});
+  else if(type==="wave")await wave(a,b,icon,col,ult?5:2);
+  else if(type==="rain"){if(off||ult){await rain({x:BP.x,y:BP.y-26,w:18},icon,col,ult?18:8);}else{await rain({x:70,y:104,w:34},icon,col,8);hitBoss=false;}
+    if(ult&&!off)await aura(m,allies,icon,col,true);}
+  else{await aura(m,allies,icon,col,ult);hitBoss=false;}
+  if(!hitBoss)await shot(a,b,"star",col,{n:ult?5:1,arc:8,dur:14,gap:3});
+  if(ult){shake=6;flash=.7;burst(b.x,b.y,"#fff",16);}
+  m.pose="idle";}
+function frame(){tick++;cx.save();cx.clearRect(0,0,W,H);
+  if(shake>0){cx.translate(Math.round(rnd(-shake,shake)),Math.round(rnd(-shake,shake)));shake*=.86;if(shake<.5)shake=0;}
+  drawBg(bgIndex);
+  if(G){const B=G.boss;if(B.hurt>0)B.hurt--;drawBoss(B);
+    const bw=90,bx=W-bw-8;px(bx-1,7,bw+2,7,"#000");px(bx,8,bw,5,"#3a1420");px(bx,8,Math.max(0,B.cur/B.hp)*bw,5,"#ff5d6c");
+    G.team.forEach((m,i)=>{if(m.hurt>0)m.hurt--;const hx=m.hurt>0?((tick>>1)%2?1:-1):0;
+      if(m.sh>0&&m.hp>0){for(let a=0;a<6.28;a+=.3)px(m.x+Math.cos(a+tick/30)*11,m.y-12+Math.sin(a+tick/30)*15,1,1,"#62b6ff");}
+      if(i===G.turn&&m.hp>0){const by=m.y-34+((tick>>4)%2);px(m.x-2,by,5,1,"#ffd447");px(m.x-1,by+1,3,1,"#ffd447");px(m.x,by+2,1,1,"#ffd447");}
+      drawChar(m.f.id,m.x+m.ox+hx,m.y+m.oy,{pose:m.hp<=0?"ko":m.pose,t:tick+i*17});});}
+  fx=fx.filter(e=>{e.t+=window.SPEED;if(e.t<0)return true;e.draw(Math.min(1,e.t/e.dur),e.t);if(e.t>=e.dur){e.done();return false;}return true;});
+  if(flash>0){cx.fillStyle="rgba(255,255,255,"+flash.toFixed(2)+")";cx.fillRect(-8,-8,W+16,H+16);flash-=.07;}
+  cx.restore();requestAnimationFrame(frame);}
+
+// ================= RULES =================
+const RX={heal:/heal|restor|regenerat|regain|\bfed\b|comfort|hug/,shield:/shield|barrier|armor|immun|invulnerab|dodg|protect/,
+  stun:/stun|silenc|fro[sz]e|freez|slow|confus|blind|pause|knock|distract/,buff:/boost|focus|bonus|speed|morale|motivat|energiz|confiden/};
+function tagsOf(sk){const d=sk.description.toLowerCase();return Object.keys(RX).filter(k=>RX[k].test(d));}
+function isOffensive(t){return t.includes("stun")||!t.some(x=>x!=="stun");}
+function powerOf(f,sk){const s=f.stats;return sk.key==="Q"?s.energy:sk.key==="W"?s.kindness:sk.key==="E"?s.weird+20:(s.humor+s.kindness+s.energy+s.weird)/4;}
+const TAGTXT={heal:"HEAL",shield:"SHIELD",stun:"STUN",buff:"BUFF",dmg:"DMG"};
+function labelOf(sk){const t=tagsOf(sk);return (isOffensive(t)?["dmg"]:[]).concat(t).map(x=>TAGTXT[x]).join(" ");}
+
+// ================= SELECT =================
+let picked=[];const URLS={};
+function renderGrid(){
+  $("grid").innerHTML=FIGHTERS.map(f=>'<button class="card" data-id="'+f.id+'"><img src="'+URLS[f.id]+'" alt="">'+esc(f.name)+'</button>').join("");
+  $("grid").onclick=e=>{const b=e.target.closest(".card");if(!b)return;const id=b.dataset.id;
+    if(picked.includes(id))picked=picked.filter(x=>x!==id);else if(picked.length<3)picked.push(id);
+    document.querySelectorAll(".card").forEach(c=>{const i=picked.indexOf(c.dataset.id);c.classList.toggle("sel",i>=0);c.dataset.n=i>=0?"P"+(i+1):"";});
+    $("count").textContent=picked.length+"/3";$("fightBtn").disabled=picked.length!==3;showInfo(id);};}
+function showInfo(id){const f=FIGHTERS.find(x=>x.id===id);
+  $("info").innerHTML='<img src="'+spriteURL(id,"cast")+'" alt=""><div><h2>'+esc(f.name)+'</h2><div class="bars">'+Object.entries(f.stats).map(([k,v])=>'<span>'+k.toUpperCase()+'</span><div class="bar"><i style="width:'+v+'%"></i></div>').join("")+'</div>'+
+   f.skills.map(s=>'<div class="sk"><b>'+s.key+' '+esc(s.name)+'</b> <span style="color:var(--blue)">'+labelOf(s)+'</span></div>').join("")+'</div>';}
+
+// ================= BATTLE =================
+const SLOT=[{x:40,y:124},{x:68,y:132},{x:96,y:124}];
+function startRun(){G={wave:0,turn:-1,busy:true,buff:false,team:picked.map((id,i)=>({f:FIGHTERS.find(x=>x.id===id),hp:100,sh:0,ult:0,x:SLOT[i].x,y:SLOT[i].y,ox:0,oy:0,pose:"idle",hurt:0}))};
+  $("log").innerHTML="";show("battle");startWave();}
+function startWave(){const b=BOSSES[G.wave];bgIndex=G.wave;G.boss=Object.assign({},b,{cur:b.hp,stunned:false,resist:0,ox:0,alpha:1,hurt:0,gone:false});G.round=0;G.turn=-1;
+  $("waveName").innerHTML="MONSTER "+(G.wave+1)+"/"+BOSSES.length+': <span style="color:var(--red)">'+esc(b.name)+'</span>';log('<span class="b">'+esc(b.name)+'</span> appears. '+esc(b.intro));nextTurn();}
+function alive(){return G.team.filter(m=>m.hp>0);}
+function refresh(){$("status").innerHTML=G.team.map((m,i)=>'<div class="st'+(i===G.turn&&m.hp>0?" act":"")+(m.hp<=0?" ko":"")+'"><span class="ult">'+"*".repeat(m.ult)+'</span>'+esc(m.f.name)+'<div class="hp"><i style="width:'+m.hp+'%"></i><u style="width:'+Math.min(100,m.sh)+'%"></u></div>'+(m.hp<=0?"KO":Math.round(m.hp)+" HP")+'</div>').join("");}
+function nextTurn(){let i=G.turn+1;while(i<G.team.length&&G.team[i].hp<=0)i++;
+  if(i>=G.team.length)return bossTurn();
+  G.turn=i;const m=G.team[i];refresh();$("turnName").textContent=m.f.name.toUpperCase()+"'S TURN";
+  $("skills").innerHTML=m.f.skills.map((s,k)=>{const locked=s.key==="R"&&m.ult<3;
+    return '<button class="sbtn" data-k="'+k+'" '+(locked?"disabled":"")+' title="'+esc(s.description)+'"><kbd>'+s.key+'</kbd>'+esc(s.name.replace(/^Ultimate\s*[-–]\s*/,""))+'<span class="tags">'+(locked?"CHARGING "+m.ult+"/3":labelOf(s))+'</span></button>';}).join("");
+  G.busy=false;}
+function hurtBoss(n){n=Math.round(n*(G.buff?1.5:1));G.buff=false;G.boss.cur-=n;G.boss.hurt=14;floatText(BP.x,BP.y-62,"-"+n,"#ffd447");return n;}
+async function cast(k){if(!G||G.busy)return;const m=G.team[G.turn],sk=m&&m.f.skills[k];if(!sk||(sk.key==="R"&&m.ult<3))return;
+  G.busy=true;$("skills").querySelectorAll("button").forEach(b=>b.disabled=true);
+  const t=tagsOf(sk),P=powerOf(m.f,sk)*rnd(.9,1.1),ult=sk.key==="R",support=t.some(x=>x!=="stun"),off=isOffensive(t),out=[];
+  log('<span class="n">'+esc(m.f.name)+'</span> uses <span class="n">'+esc(sk.name)+'</span>.<br><span class="d">'+esc(sk.description)+'</span>');
+  await playSkill(m,k);
+  out.push(hurtBoss(ult?P*0.65:off?P*(support?0.24:0.32):P*0.1)+" dmg");
+  if(t.includes("heal")||(ult&&support)){const amt=Math.round(P*(ult?0.2:0.22));
+    (ult?alive():[alive().sort((a,b)=>a.hp-b.hp)[0]]).forEach(x=>{x.hp=Math.min(100,x.hp+amt);floatText(x.x,x.y-30,"+"+amt,"#5fe08a");});out.push("+"+amt+" hp"+(ult?" to all":""));}
+  if(t.includes("shield")){const amt=Math.round(P*0.22);(ult?alive():[m]).forEach(x=>x.sh=Math.min(60,x.sh+amt));out.push("shield "+amt);}
+  if(t.includes("buff")){G.buff=true;out.push("next hit x1.5");}
+  if(t.includes("stun")&&G.boss.resist<=0&&Math.random()<(ult?0.8:0.4)){G.boss.stunned=true;G.boss.resist=3;out.push("monster stunned");floatText(BP.x,BP.y-72,"STUNNED","#62b6ff");}
+  m.ult=ult?0:Math.min(3,m.ult+1);
+  log(out.join(" / "),"d");refresh();await wait(520);
+  if(G.boss.cur<=0)return waveWon();nextTurn();}
+async function bossTurn(){G.turn=-1;refresh();const b=G.boss;$("turnName").textContent=b.name;$("skills").innerHTML="";await wait(300);
+  b.resist--;G.round++;
+  if(b.stunned){b.stunned=false;log('<span class="b">'+esc(b.name)+'</span> is too stunned to act.');await wait(400);}
+  else{const all=G.round%3===0,targets=all?alive():[alive()[Math.floor(Math.random()*alive().length)]];
+    log(all?'<span class="b">'+esc(b.aoe)+'</span>':'<span class="b">'+esc(b.name)+'</span> '+esc(b.hit)+' '+esc(targets[0].f.name)+'.');
+    fxp(8,k=>{b.ox=-10*Math.sin(k*Math.PI);}).then(()=>b.ox=0);
+    if(all){if(b.key==="resident")flash=.3;await rain({x:68,y:108,w:40},b.key==="exams"?"pen":b.key==="farewell"?"tear":"smoke",b.key==="farewell"?"#6cc8ff":b.col,16);shake=4;}
+    else await shot({x:BP.x-22,y:BP.y-38},{x:targets[0].x,y:targets[0].y-12},b.icon,b.col,{n:3,s:1,arc:10,gap:4});
+    targets.forEach(x=>{let n=Math.round(b.atk*(all?0.65:1)*rnd(.8,1.2));const ab=Math.min(x.sh,n);x.sh-=ab;n-=ab;x.hp=Math.max(0,x.hp-n);x.hurt=14;
+      floatText(x.x,x.y-30,n?"-"+n:"BLOCK",n?"#ff5d6c":"#62b6ff");if(x.hp<=0)log(esc(x.f.name)+" needs a nap. KO.","d");});}
+  refresh();await wait(520);
+  if(!alive().length)return lose();nextTurn();}
+async function waveWon(){const B=G.boss,last=G.wave===BOSSES.length-1;refresh();shake=5;
+  for(let i=0;i<5;i++)burst(BP.x+rnd(-14,14),BP.y-rnd(8,50),i%2?"#fff":"#ffd447",10);
+  await fxp(last?70:36,k=>{B.alpha=1-k;});B.gone=true;
+  if(last){log('<span class="n">THE FAREWELL fades.</span> It waves one last time.');await wait(900);return farewell();}
+  log('<span class="n">'+esc(B.name)+' defeated!</span> The squad shares snacks and recovers.');
+  G.team.forEach(x=>{if(x.hp>0)x.hp=Math.min(100,x.hp+25);else x.hp=30;});G.wave++;refresh();await wait(900);startWave();}
+function lose(){$("endRow").innerHTML=G.team.map(m=>'<img src="'+URLS[m.f.id]+'" alt="">').join("");
+  $("endText").innerHTML=esc(G.team.map(m=>m.f.name).join(", "))+" fell to "+esc(BOSSES[G.wave].name)+".<br>Try a squad with a healer, and save the ultimates.";G=null;show("end");}
+
+// ================= ENDING =================
+let typer=0;
+function farewell(){G=null;try{localStorage.setItem("bye_won","1");}catch(e){}
+  show("farewell");$("verse").textContent="";$("toMem").classList.remove("in");let i=0;clearInterval(typer);
+  typer=setInterval(()=>{i++;$("verse").textContent=VERSE.slice(0,i);if(i>=VERSE.length){clearInterval(typer);$("toMem").classList.add("in");}},Math.max(8,70/window.SPEED));}
+let lbI=0,lbTimer=0;
+function buildWall(){if($("wall").children.length)return;
+  $("wall").innerHTML=PHOTOS.map((p,i)=>'<button class="pol" data-i="'+i+'" style="--r:'+(((i*37)%9)-4)+'deg;position:relative">'+(i%3===0?'<i class="tape"></i>':'')+'<img loading="lazy" src="'+p+'" alt="Team photo '+(i+1)+'"><span>#'+(i+1)+'</span></button>').join("");
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll(".pol").forEach(p=>io.observe(p));
+  $("wall").onclick=e=>{const b=e.target.closest(".pol");if(b)openLb(+b.dataset.i);};
+  $("cast").innerHTML=FIGHTERS.map(f=>'<div><img src="'+URLS[f.id]+'" alt="">'+esc(f.name)+'</div>').join("");}
+function openLb(i){lbI=(i+PHOTOS.length)%PHOTOS.length;$("lbImg").src=PHOTOS[lbI];$("lb").classList.add("on");}
+function closeLb(){$("lb").classList.remove("on");clearInterval(lbTimer);lbTimer=0;$("lbPlay").textContent="PLAY";}
+function memories(){buildWall();show("memories");}
+
+// ================= WIRING =================
+$("skills").onclick=e=>{const b=e.target.closest(".sbtn");if(b&&!b.disabled)cast(+b.dataset.k);};
+document.addEventListener("keydown",e=>{
+  if($("lb").classList.contains("on")){if(e.key==="Escape")closeLb();if(e.key==="ArrowRight")openLb(lbI+1);if(e.key==="ArrowLeft")openLb(lbI-1);return;}
+  const k="qwer".indexOf(e.key.toLowerCase());if(k>=0&&G&&$("battle").classList.contains("on"))cast(k);});
+$("startBtn").onclick=()=>show("select");
+$("fightBtn").onclick=startRun;
+function again(){picked=[];renderGrid();$("count").textContent="0/3";$("fightBtn").disabled=true;show("select");}
+$("againBtn").onclick=again;$("again2").onclick=again;
+$("toMem").onclick=memories;$("memBtn").onclick=memories;
+$("lbClose").onclick=closeLb;$("lbNext").onclick=()=>openLb(lbI+1);$("lbPrev").onclick=()=>openLb(lbI-1);
+$("lb").onclick=e=>{if(e.target.id==="lb")closeLb();};
+$("lbPlay").onclick=()=>{if(lbTimer){clearInterval(lbTimer);lbTimer=0;$("lbPlay").textContent="PLAY";}else{lbTimer=setInterval(()=>openLb(lbI+1),2600);$("lbPlay").textContent="PAUSE";}};
+FIGHTERS.forEach(f=>URLS[f.id]=spriteURL(f.id));
+$("parade").innerHTML=FIGHTERS.slice().sort(()=>Math.random()-.5).slice(0,8).map(f=>'<img src="'+URLS[f.id]+'" alt="">').join("");
+renderGrid();
+try{if(localStorage.getItem("bye_won"))$("memBtn").style.display="inline-block";}catch(e){}
+if(location.hash==="#memories")memories();
+if(location.hash==="#farewell")farewell();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
